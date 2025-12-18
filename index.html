@@ -206,7 +206,7 @@
                 
                 contentContainer.appendChild(card);
                 document.getElementById('launchBtn').onclick = (e) => {
-                    e.stopPropagation(); // Prevent bubbling causing immediate skip
+                    e.stopPropagation();
                     startCountdown();
                 };
                 setTimeout(() => card.classList.replace('opacity-0', 'opacity-100'), 10);
@@ -229,38 +229,45 @@
 
                 let count = 5;
                 let hasLaunched = false;
+                let countdownInterval;
 
                 const launchGame = () => {
                     if (hasLaunched) return;
                     hasLaunched = true;
                     
-                    if (typeof iv !== 'undefined') clearInterval(iv);
+                    if (countdownInterval) clearInterval(countdownInterval);
                     document.removeEventListener('keydown', skipAction);
                     document.removeEventListener('mousedown', skipAction);
                     
-                    overlay.classList.add('opacity-0', 'scale-105'); 
+                    overlay.style.opacity = '0';
+                    overlay.style.pointerEvents = 'none';
                     
-                    // Delay removal to allow fade out
-                    setTimeout(() => {
-                        const script = document.createElement('script');
-                        script.type = 'text/javascript';
-                        script.src = 'classes.js';
-                        script.onload = () => {
-                            if (typeof main === 'function') main();
+                    // The core fix: Injected classes.js into the DOM and manually triggering main()
+                    // after ensuring the window.eaglercraftXOpts is fully set.
+                    const script = document.createElement('script');
+                    script.type = 'text/javascript';
+                    script.src = 'classes.js';
+                    script.async = true;
+                    script.onload = () => {
+                        console.log("Mineral: Classes loaded. Triggering main...");
+                        // We wrap the main call to handle environments where it's already auto-called
+                        setTimeout(() => {
+                            if (typeof window.main === 'function') {
+                                window.main();
+                            }
                             overlay.remove();
-                        };
-                        document.body.appendChild(script);
-                    }, 500);
+                        }, 100);
+                    };
+                    document.head.appendChild(script);
                 };
 
                 const skipAction = (e) => {
-                    // Ignore the initial click that started the countdown
-                    if (Date.now() - startTime < 300) return;
+                    if (Date.now() - startTime < 500) return;
                     launchGame();
                 };
 
                 const startTime = Date.now();
-                const iv = setInterval(() => {
+                countdownInterval = setInterval(() => {
                     const cd = document.getElementById('count');
                     const bar = document.getElementById('bar');
                     const hint = document.getElementById('skipHint');
@@ -284,11 +291,10 @@
                     
                 }, 1000);
 
-                // Add skip listeners with a tiny delay to ensure they don't catch the initial click
                 setTimeout(() => {
                     document.addEventListener('keydown', skipAction);
                     document.addEventListener('mousedown', skipAction);
-                }, 100);
+                }, 200);
             }
 
             initInteractiveLoader();
