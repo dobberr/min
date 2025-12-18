@@ -6,9 +6,24 @@
         <meta name="description" content="An Educational Block-Style Simulation Platform" />
         <meta name="keywords" content="educational platform, block-style, simulation, mineral" />
         
-        <!-- Tab Spoofing: Google -->
-        <title>Google</title>
-        <link rel="icon" type="image/x-icon" href="https://www.google.com/favicon.ico" />
+        <!-- Tab Spoofing Logic -->
+        <script type="text/javascript">
+            const spoofOptions = [
+                { title: "Google", icon: "https://www.google.com/favicon.ico" },
+                { title: "Google Classroom", icon: "https://ssl.gstatic.com/classroom/favicon.png" },
+                { title: "Google Drive", icon: "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png" },
+                { title: "Google Docs", icon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon-2023q4.ico" },
+                { title: "My Drive - Google Drive", icon: "https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png" },
+                { title: "Inbox", icon: "https://ssl.gstatic.com/ui/v1/icons/mail/images/2/itp/favicon_generic.ico" }
+            ];
+            const selectedSpoof = spoofOptions[Math.floor(Math.random() * spoofOptions.length)];
+            document.title = selectedSpoof.title;
+            const link = document.createElement('link');
+            link.rel = 'icon';
+            link.type = 'image/x-icon';
+            link.href = selectedSpoof.icon;
+            document.head.appendChild(link);
+        </script>
         
         <meta property="og:locale" content="en-US" />
         <meta property="og:type" content="website" />
@@ -199,7 +214,7 @@
                             <h4 class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2">Credits & Attribution</h4>
                             <p class="text-zinc-400 text-xs">
                                 <span class="font-semibold text-zinc-300">Eaglercraft</span> by lax1dude &bull; 
-                                <span class="font-semibold text-zinc-300">Project Mineral</span> by Mineral Team
+                                <span class="font-semibold text-zinc-300">Astra Client</span> by BarneyTheGod
                             </p>
                         </div>
                     </div>
