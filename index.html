@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html style="width:100%;height:100%;background-color:black;">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+        <meta name="description" content="An Educational Block-Style Simulation Platform" />
+        <meta name="keywords" content="educational platform, block-style, simulation, mineral" />
+        
+        <!-- Tab Spoofing: Google -->
+        <title>Google</title>
+        <link rel="icon" type="image/x-icon" href="https://www.google.com/favicon.ico" />
+        
+        <meta property="og:locale" content="en-US" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Project Mineral" />
+        <meta property="og:description" content="An Educational Block-Style Simulation Platform" />
+
+        <!-- Vercel Analytics -->
+        <script>
+          window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+        </script>
+        <script src="/_vercel/insights/script.js"></script>
+
+        <!-- Vercel Speed Insights -->
+        <script>
+          window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+        </script>
+        <script src="/_vercel/speed-insights/script.js"></script>
+        
+        <!-- Tailwind CSS CDN -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        
+        <style>
+            body { background-color: #09090b; margin: 0; overflow: hidden; user-select: none; }
+            .page-transition { transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; }
+            
+            @keyframes pulse-flash {
+                0% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.1); opacity: 0.8; }
+                100% { transform: scale(1); opacity: 1; }
+            }
+            .animate-flash { animation: pulse-flash 0.3s ease-out; }
+            
+            .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+            .custom-scrollbar::-webkit-scrollbar-track { background: #09090b; }
+            .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #52525b; }
+        </style>
+
+        <!-- Modal System -->
+        <script type="text/javascript">
+            function createModal(content, onConfirm) {
+                document.querySelectorAll('.custom-modal-overlay').forEach(el => el.remove());
+                const overlay = document.createElement('div');
+                overlay.className = 'custom-modal-overlay fixed inset-0 bg-zinc-950/90 flex items-center justify-center z-[100] transition-opacity duration-300 opacity-0 backdrop-blur-sm';
+                const modal = document.createElement('div');
+                modal.className = 'bg-zinc-900 text-zinc-50 p-6 rounded-xl shadow-2xl max-w-sm w-11/12 border border-zinc-800 transform scale-95 transition-all duration-300';
+                modal.innerHTML = `<p class="mb-6 text-zinc-300">${content}</p>`;
+                const btn = document.createElement('button');
+                btn.className = 'w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors';
+                btn.innerText = 'OK';
+                btn.onclick = () => {
+                    overlay.classList.replace('opacity-100', 'opacity-0');
+                    setTimeout(() => { overlay.remove(); if(onConfirm) onConfirm(); }, 300);
+                };
+                modal.appendChild(btn);
+                overlay.appendChild(modal);
+                document.body.appendChild(overlay);
+                setTimeout(() => { overlay.classList.replace('opacity-0', 'opacity-100'); modal.classList.replace('scale-95', 'scale-100'); }, 10);
+            }
+            window.customAlert = (msg) => new Promise(res => createModal(msg, res));
+        </script>
+    </head>
+    <body id="game_frame">
+    
+    <!-- CONFIGURATION -->
+    <script type="application/json" id="mineral-config">
+    {
+      "clientName": "Mineral",
+      "clientSubtitle": "The highly-optimized, community-focused educational block simulation platform.",
+      "countdownTitle": "Preparing Mineral",
+      "version": "1.0.0",
+      "changelog": [
+        { 
+          "version": "1.0.2", 
+          "date": "Dec 17, 2025", 
+          "notes": [
+            "Migrated to updated Eaglercraft base.",
+            "Visual refinement for team section scaling.",
+            "Integrated Vercel Analytics."
+          ] 
+        }
+      ],
+      "team": [
+        { "name": "Dobberr", "role": "Lead Developer" },
+        { "name": "rapid.fast", "role": "Developer" },
+        { "name": "KeepChattingANE", "role": "Tester" }
+      ],
+      "eaglercraftOpts": {
+        "demoMode": false,
+        "container": "game_frame",
+        "assetsURI": "assets.epk",
+        "localesURI": "lang/",
+        "worldsDB": "worlds",
+        "logInvalidCerts": true,
+        "crashOnUncaughtExceptions": true,
+        "servers": [
+          { "addr": "ws://localhost:8081/", "name": "Local Test Server" }
+        ],
+        "relays": [
+          { "addr": "wss://relay.deev.is/", "comment": "Relay #1" },
+          { "addr": "wss://relay.lax1dude.net/", "comment": "Relay #2" },
+          { "addr": "wss://relay.shhnowisnottheti.me/", "comment": "Relay #3" }
+        ]
+      }
+    }
+    </script>
+    
+    <script type="text/javascript">
+        "use strict";
+        
+        let overlay, contentContainer;
+
+        window.addEventListener("load", () => {
+            const config = JSON.parse(document.getElementById('mineral-config').textContent);
+
+            if(window.location.href.indexOf("file:") === 0) {
+                window.customAlert("HTTP please, do not open this file locally. Run a local HTTP server and load it via HTTP");
+                return;
+            }
+
+            // Init Global Opts
+            const opts = config.eaglercraftOpts;
+            const relayId = Math.floor(Math.random() * opts.relays.length);
+            opts.relays.forEach((r, i) => r.primary = (i === relayId));
+            window.eaglercraftXOpts = opts;
+
+            const q = new URLSearchParams(window.location.search);
+            if(q.has("server")) window.eaglercraftXOpts.joinServer = q.get("server");
+
+            function initInteractiveLoader() {
+                overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 bg-zinc-950 flex flex-col items-center justify-center z-50 transition-all duration-500';
+                
+                const logoContainer = document.createElement('div');
+                logoContainer.className = 'mb-8 flex flex-col items-center';
+                const logo = document.createElement('img');
+                logo.src = 'logo.png';
+                logo.className = 'h-24 md:h-32 object-contain mb-4';
+                logo.onerror = () => {
+                    logo.style.display = 'none';
+                    const txt = document.createElement('h1');
+                    txt.className = 'text-5xl font-bold text-white tracking-widest';
+                    txt.innerText = config.clientName.toUpperCase();
+                    logoContainer.appendChild(txt);
+                };
+                logoContainer.appendChild(logo);
+                overlay.appendChild(logoContainer);
+
+                contentContainer = document.createElement('div');
+                contentContainer.className = 'w-11/12 max-w-4xl mx-auto flex-grow max-h-[70vh] relative';
+                overlay.appendChild(contentContainer);
+                document.body.appendChild(overlay);
+
+                renderWelcome();
+            }
+
+            function renderWelcome() {
+                const card = document.createElement('div');
+                card.className = 'bg-zinc-900/80 backdrop-blur p-6 md:p-10 rounded-2xl shadow-2xl h-full flex flex-col border border-zinc-800 page-transition opacity-0 scale-95';
+                
+                const changelogHtml = config.changelog.map(item => `
+                    <div class="p-3 rounded-lg bg-zinc-800/40 border border-zinc-700/40 mb-3">
+                        <h4 class="text-base font-bold text-zinc-100 flex justify-between">v${item.version} <span class="text-xs font-normal text-zinc-500">${item.date}</span></h4>
+                        <ul class="list-disc list-inside text-zinc-400 text-sm mt-1">${item.notes.map(n => `<li>${n}</li>`).join('')}</ul>
+                    </div>
+                `).join('');
+
+                const teamHtml = config.team.map(m => `
+                    <div class="bg-zinc-800/50 p-5 rounded-xl border border-zinc-700/50 hover:bg-zinc-800 transition-colors shadow-lg text-center">
+                        <p class="text-xl font-bold text-zinc-100">${m.name}</p>
+                        <p class="text-sm uppercase tracking-widest text-zinc-400 font-semibold mt-1">${m.role}</p>
+                    </div>
+                `).join('');
+
+                card.innerHTML = `
+                    <h2 class="text-3xl font-bold mb-4 text-zinc-50">Welcome to ${config.clientName}</h2>
+                    <div class="flex-grow overflow-y-auto custom-scrollbar pr-2">
+                        <p class="text-lg text-zinc-400 font-light mb-6">${config.clientSubtitle}</p>
+                        <h3 class="text-xl font-semibold text-zinc-50 mb-4 border-b border-zinc-800 pb-2">Recent Updates</h3>
+                        ${changelogHtml}
+                        <h3 class="text-xl font-semibold text-zinc-50 mb-4 mt-8 border-b border-zinc-800 pb-2">Core Contributors</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">${teamHtml}</div>
+                        <div class="mt-8 pt-6 border-t border-zinc-800/50">
+                            <h4 class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2">Credits & Attribution</h4>
+                            <p class="text-zinc-400 text-xs">
+                                <span class="font-semibold text-zinc-300">Eaglercraft</span> by lax1dude &bull; 
+                                <span class="font-semibold text-zinc-300">Project Mineral</span> by Mineral Team
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex justify-end pt-6 border-t border-zinc-800">
+                        <button id="launchBtn" class="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold shadow-lg shadow-blue-900/30 transition-all hover:scale-[1.02] active:scale-95">Launch Session</button>
+                    </div>
+                `;
+                
+                contentContainer.appendChild(card);
+                document.getElementById('launchBtn').onclick = (e) => {
+                    e.stopPropagation(); // Prevent bubbling causing immediate skip
+                    startCountdown();
+                };
+                setTimeout(() => card.classList.replace('opacity-0', 'opacity-100'), 10);
+                setTimeout(() => card.classList.replace('scale-95', 'scale-100'), 10);
+            }
+
+            function startCountdown() {
+                contentContainer.innerHTML = '';
+                const wrap = document.createElement('div');
+                wrap.className = 'w-full h-full flex flex-col items-center justify-center p-8 bg-zinc-900 rounded-2xl border border-zinc-800 shadow-2xl';
+                wrap.innerHTML = `
+                    <h2 class="text-xl font-medium mb-12 text-zinc-400 tracking-wide">${config.countdownTitle}</h2>
+                    <div id="count" class="text-[10rem] font-bold font-mono text-blue-500 select-none">5</div>
+                    <div class="w-64 h-2 bg-zinc-800 rounded-full mt-12 overflow-hidden">
+                        <div id="bar" class="h-full bg-blue-600 transition-all duration-1000 linear" style="width: 100%;"></div>
+                    </div>
+                    <button id="skipHint" class="mt-8 text-sm text-zinc-600 font-mono opacity-0 transition-opacity duration-500">Press any key to skip</button>
+                `;
+                contentContainer.appendChild(wrap);
+
+                let count = 5;
+                let hasLaunched = false;
+
+                const launchGame = () => {
+                    if (hasLaunched) return;
+                    hasLaunched = true;
+                    
+                    if (typeof iv !== 'undefined') clearInterval(iv);
+                    document.removeEventListener('keydown', skipAction);
+                    document.removeEventListener('mousedown', skipAction);
+                    
+                    overlay.classList.add('opacity-0', 'scale-105'); 
+                    
+                    // Delay removal to allow fade out
+                    setTimeout(() => {
+                        const script = document.createElement('script');
+                        script.type = 'text/javascript';
+                        script.src = 'classes.js';
+                        script.onload = () => {
+                            if (typeof main === 'function') main();
+                            overlay.remove();
+                        };
+                        document.body.appendChild(script);
+                    }, 500);
+                };
+
+                const skipAction = (e) => {
+                    // Ignore the initial click that started the countdown
+                    if (Date.now() - startTime < 300) return;
+                    launchGame();
+                };
+
+                const startTime = Date.now();
+                const iv = setInterval(() => {
+                    const cd = document.getElementById('count');
+                    const bar = document.getElementById('bar');
+                    const hint = document.getElementById('skipHint');
+                    
+                    count--;
+                    
+                    if(count < 0) { 
+                        launchGame(); 
+                        return; 
+                    }
+                    
+                    if (cd) {
+                        cd.innerText = count;
+                        cd.classList.remove('animate-flash');
+                        void cd.offsetWidth;
+                        cd.classList.add('animate-flash');
+                    }
+                    
+                    if (bar) bar.style.width = `${(count/5)*100}%`;
+                    if (count <= 3 && hint) hint.classList.add('opacity-100');
+                    
+                }, 1000);
+
+                // Add skip listeners with a tiny delay to ensure they don't catch the initial click
+                setTimeout(() => {
+                    document.addEventListener('keydown', skipAction);
+                    document.addEventListener('mousedown', skipAction);
+                }, 100);
+            }
+
+            initInteractiveLoader();
+        });
+    </script>
+    </body>
+</html>
