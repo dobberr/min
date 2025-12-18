@@ -20,7 +20,19 @@
         <script type="text/javascript" src="classes.js"></script>
 
         <style>
-            body { background-color: #09090b; margin: 0; overflow: hidden; user-select: none; }
+            body, html { 
+                background-color: #000; 
+                margin: 0; 
+                width: 100%; 
+                height: 100%; 
+                overflow: hidden; 
+                user-select: none; 
+            }
+            #game_frame {
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
             .page-transition { transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; }
             
             @keyframes pulse-flash {
@@ -127,7 +139,8 @@
 
             function initInteractiveLoader() {
                 overlay = document.createElement('div');
-                overlay.className = 'fixed inset-0 bg-zinc-950 flex flex-col items-center justify-center z-50 transition-all duration-500';
+                overlay.id = 'mineral_overlay';
+                overlay.className = 'fixed inset-0 bg-zinc-950 flex flex-col items-center justify-center z-[9999] transition-all duration-500';
                 
                 const logoContainer = document.createElement('div');
                 logoContainer.className = 'mb-8 flex flex-col items-center';
@@ -226,16 +239,22 @@
                     document.removeEventListener('keydown', skipAction);
                     document.removeEventListener('mousedown', skipAction);
                     
+                    // Fade out UI
                     overlay.style.opacity = '0';
                     overlay.style.pointerEvents = 'none';
                     
                     setTimeout(() => {
                         overlay.remove();
-                        // Trigger the main function from classes.js
+                        // Explicitly set the container style to be sure WebGL can find dimensions
+                        const frame = document.getElementById('game_frame');
+                        if (frame) {
+                            frame.style.width = '100vw';
+                            frame.style.height = '100vh';
+                        }
+                        
+                        console.log("Mineral: Overlay removed. Starting game loop...");
                         if (typeof main === 'function') {
                             main();
-                        } else {
-                            console.error("Critical: main() not found in classes.js");
                         }
                     }, 500);
                 };
