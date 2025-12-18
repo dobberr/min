@@ -15,21 +15,10 @@
         <meta property="og:title" content="Project Mineral" />
         <meta property="og:description" content="An Educational Block-Style Simulation Platform" />
 
-        <!-- Vercel Analytics -->
-        <script>
-          window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-        </script>
-        <script src="/_vercel/insights/script.js"></script>
-
-        <!-- Vercel Speed Insights -->
-        <script>
-          window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
-        </script>
-        <script src="/_vercel/speed-insights/script.js"></script>
-        
-        <!-- Tailwind CSS CDN -->
+        <!-- Scripts -->
         <script src="https://cdn.tailwindcss.com"></script>
-        
+        <script type="text/javascript" src="classes.js"></script>
+
         <style>
             body { background-color: #09090b; margin: 0; overflow: hidden; user-select: none; }
             .page-transition { transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; }
@@ -47,7 +36,6 @@
             .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #52525b; }
         </style>
 
-        <!-- Modal System -->
         <script type="text/javascript">
             function createModal(content, onConfirm) {
                 document.querySelectorAll('.custom-modal-overlay').forEach(el => el.remove());
@@ -73,7 +61,6 @@
     </head>
     <body id="game_frame">
     
-    <!-- CONFIGURATION -->
     <script type="application/json" id="mineral-config">
     {
       "clientName": "Mineral",
@@ -129,7 +116,7 @@
                 return;
             }
 
-            // Init Global Opts
+            // Init Options
             const opts = config.eaglercraftOpts;
             const relayId = Math.floor(Math.random() * opts.relays.length);
             opts.relays.forEach((r, i) => r.primary = (i === relayId));
@@ -242,23 +229,15 @@
                     overlay.style.opacity = '0';
                     overlay.style.pointerEvents = 'none';
                     
-                    // The core fix: Injected classes.js into the DOM and manually triggering main()
-                    // after ensuring the window.eaglercraftXOpts is fully set.
-                    const script = document.createElement('script');
-                    script.type = 'text/javascript';
-                    script.src = 'classes.js';
-                    script.async = true;
-                    script.onload = () => {
-                        console.log("Mineral: Classes loaded. Triggering main...");
-                        // We wrap the main call to handle environments where it's already auto-called
-                        setTimeout(() => {
-                            if (typeof window.main === 'function') {
-                                window.main();
-                            }
-                            overlay.remove();
-                        }, 100);
-                    };
-                    document.head.appendChild(script);
+                    setTimeout(() => {
+                        overlay.remove();
+                        // Trigger the main function from classes.js
+                        if (typeof main === 'function') {
+                            main();
+                        } else {
+                            console.error("Critical: main() not found in classes.js");
+                        }
+                    }, 500);
                 };
 
                 const skipAction = (e) => {
