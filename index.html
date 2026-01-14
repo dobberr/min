@@ -75,7 +75,6 @@
                 overlay.querySelector('button').onclick = close;
                 document.body.appendChild(overlay);
                 
-                // Trigger animation
                 requestAnimationFrame(() => {
                     overlay.classList.add('opacity-100');
                     overlay.firstElementChild.classList.replace('scale-95', 'scale-100');
@@ -140,27 +139,22 @@
             const config = JSON.parse(document.getElementById('mineral-config').textContent);
             let overlay, contentContainer;
 
-            // Protocol Check
             if(window.location.protocol === 'file:') {
                 window.customAlert("Error: Please do not open this file locally.<br>Run a local HTTP server.");
                 return;
             }
 
-            // Init EaglerOpts
             const opts = config.eaglercraftOpts;
             opts.relays.forEach((r, i) => r.primary = (i === Math.floor(Math.random() * opts.relays.length)));
             window.eaglercraftXOpts = opts;
 
-            // Handle URL Params
             const q = new URLSearchParams(window.location.search);
             if(q.has("server")) window.eaglercraftXOpts.joinServer = q.get("server");
 
-            // --- UI System ---
             function initInteractiveLoader() {
                 overlay = document.createElement('div');
                 overlay.className = 'fixed inset-0 bg-zinc-950 flex flex-col items-center justify-center z-[9000]';
                 
-                // Logo Section
                 const logoContainer = document.createElement('div');
                 logoContainer.className = 'mb-6 flex flex-col items-center animate-fade-in-down';
                 const logo = document.createElement('img');
@@ -185,7 +179,6 @@
                 const card = document.createElement('div');
                 card.className = 'bg-zinc-900/90 backdrop-blur-md p-6 md:p-10 rounded-2xl shadow-2xl h-full flex flex-col border border-zinc-800 page-transition opacity-0 scale-95';
                 
-                // Generators
                 const genChangelog = () => config.changelog.map(i => `
                     <div class="p-3 rounded-lg bg-zinc-950/50 border border-zinc-800/50 mb-3 hover:border-zinc-700 transition-colors">
                         <h4 class="text-sm font-bold text-zinc-100 flex justify-between items-center">
@@ -201,7 +194,6 @@
                         <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mt-1">${m.role}</p>
                     </div>`).join('');
 
-                // Render Content
                 card.innerHTML = `
                     <div class="flex items-center justify-between mb-4 border-b border-zinc-800 pb-4">
                         <div>
@@ -209,7 +201,7 @@
                             <p class="text-zinc-400 text-sm mt-1">Ready to launch ${config.clientName}?</p>
                         </div>
                         <div class="flex flex-col items-end">
-                             <span class="px-3 py-1 rounded-full bg-blue-900/20 text-blue-400 text-xs font-mono border border-blue-800/30 shadow-[0_0_10px_rgba(30,58,138,0.2)]">
+                            <span class="px-3 py-1 rounded-full bg-blue-900/20 text-blue-400 text-xs font-mono border border-blue-800/30 shadow-[0_0_10px_rgba(30,58,138,0.2)]">
                                 v${config.version}
                             </span>
                         </div>
@@ -231,8 +223,9 @@
                         </div>
 
                         <div class="pt-4 border-t border-zinc-800/50 text-center">
-                            <p class="text-zinc-500 text-[10px]">
-                                Powered by <span class="text-zinc-400 font-bold">EaglercraftX</span>by lax1dude &bull; AstraClient by <span class="text-zinc-400 font-bold">cirsius</span>
+                            <p class="text-zinc-500 text-[10px] font-medium">
+                                Powered by <span class="font-bold text-zinc-200">EaglercraftX</span> by lax1dude &bull; 
+                                ${config.clientName} by <span class="font-bold text-zinc-200">${config.team[0].name}</span>
                             </p>
                         </div>
                     </div>
@@ -248,7 +241,6 @@
                 contentContainer.innerHTML = '';
                 contentContainer.appendChild(card);
                 
-                // Animation Entry
                 requestAnimationFrame(() => {
                     card.classList.replace('opacity-0', 'opacity-100');
                     card.classList.replace('scale-95', 'scale-100');
@@ -261,7 +253,6 @@
             }
 
             function startCountdown() {
-                // Countdown UI
                 const wrap = document.createElement('div');
                 wrap.className = 'w-full h-full flex flex-col items-center justify-center p-8 bg-zinc-900/95 backdrop-blur rounded-2xl border border-zinc-800 shadow-2xl transition-all';
                 wrap.innerHTML = `
@@ -277,7 +268,6 @@
                     </button>
                 `;
                 
-                // Smooth transition between cards
                 contentContainer.firstElementChild.style.opacity = '0';
                 contentContainer.firstElementChild.style.transform = 'scale(0.95)';
                 
@@ -293,11 +283,9 @@
                     if(!active) return;
                     active = false;
                     
-                    // Cleanup Listeners
                     document.removeEventListener('keydown', finish);
                     document.removeEventListener('mousedown', finish);
                     
-                    // Fade out
                     overlay.style.opacity = '0';
                     overlay.style.pointerEvents = 'none';
                     
@@ -306,7 +294,6 @@
                         const frame = document.getElementById('game_frame');
                         if (frame) { frame.style.width = '100vw'; frame.style.height = '100vh'; }
                         
-                        // Safety Check: Ensure Engine Loaded
                         const tryLaunch = () => {
                             if (typeof main === 'function') {
                                 console.log("Mineral: Launching Main...");
@@ -333,7 +320,7 @@
                     if(el) {
                         el.innerText = count;
                         el.classList.remove('animate-flash');
-                        void el.offsetWidth; // Trigger reflow
+                        void el.offsetWidth;
                         el.classList.add('animate-flash');
                     }
                     if(bar) bar.style.width = `${(count/5)*100}%`;
@@ -341,7 +328,6 @@
 
                 }, 1000);
 
-                // Skip Listeners (Delayed slightly to prevent accidental skips)
                 setTimeout(() => {
                     document.addEventListener('keydown', finish);
                     document.addEventListener('mousedown', finish);
