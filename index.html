@@ -3,7 +3,32 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
-        <title>Project Mineral</title>
+        
+        <meta name="description" content="An Educational Block-Style Simulation Platform" />
+        <meta name="keywords" content="educational platform, block-style, simulation, mineral" />
+        <meta property="og:locale" content="en-US" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Project Mineral" />
+        <meta property="og:description" content="An Educational Block-Style Simulation Platform" />
+
+        <script type="text/javascript">
+            (function() {
+                const spoofs = [
+                    { t: "Google", i: "https://www.google.com/favicon.ico" },
+                    { t: "Google Classroom", i: "https://www.gstatic.com/classroom/favicon.png" },
+                    { t: "Google Drive", i: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
+                    { t: "Google Docs", i: "https://ssl.gstatic.com/docs/documents/images/kix-favicon-2023q4.ico" },
+                    { t: "My Drive - Google Drive", i: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
+                    { t: "Inbox (1) - Gmail", i: "https://ssl.gstatic.com/ui/v1/icons/mail/images/2/itp/favicon_generic.ico" },
+                    { t: "Google Slides", i: "https://ssl.gstatic.com/docs/presentations/images/apps-presentations-featured-32.png" }
+                ];
+                const s = spoofs[Math.floor(Math.random() * spoofs.length)];
+                document.title = s.t;
+                const link = document.createElement('link');
+                link.rel = 'icon'; link.type = 'image/x-icon'; link.href = s.i;
+                document.head.appendChild(link);
+            })();
+        </script>
         
         <script src="https://cdn.tailwindcss.com"></script>
         <script type="text/javascript" src="classes.js" defer></script>
@@ -13,27 +38,21 @@
                 background-color: #000; margin: 0; width: 100%; height: 100%; 
                 overflow: hidden; user-select: none; -webkit-user-select: none;
             }
-            
-            /* The Layout Fix: Flexbox keeps header/footer fixed, center scrolls */
-            .modal-container {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-                overflow: hidden;
-            }
-
-            .scroll-area {
-                flex-grow: 1;
-                overflow-y: auto;
-                padding-right: 8px;
-            }
-
+            .modal-container { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+            .scroll-area { flex-grow: 1; overflow-y: auto; padding-right: 8px; }
             .page-transition { transition: opacity 0.4s ease-in-out, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
             
-            /* Custom Scrollbar */
-            .scroll-area::-webkit-scrollbar { width: 4px; }
-            .scroll-area::-webkit-scrollbar-track { background: transparent; }
-            .scroll-area::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+            /* Global Scrollbar Style */
+            .custom-scroll::-webkit-scrollbar { width: 4px; }
+            .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+            .custom-scroll::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+
+            @keyframes pulse-flash {
+                0% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.1); opacity: 0.8; }
+                100% { transform: scale(1); opacity: 1; }
+            }
+            .animate-flash { animation: pulse-flash 0.3s ease-out; }
         </style>
     </head>
     <body id="game_frame">
@@ -43,23 +62,41 @@
       "clientName": "Mineral",
       "clientSubtitle": "The highly-optimized, community-focused educational block simulation platform.",
       "countdownTitle": "Preparing Mineral",
-      "version": "1.0.1",
+      "version": "1.0.5",
       "changelog": [
-        { "version": "1.0.1", "date": "Jan 12, 2026", "notes": [ "Improve countdown screen", "Improve the very screen your eyes lay upon currently (this)" ] },
+        { "version": "1.0.5", "date": "Jan 14, 2026", "notes": [ "Added nested scrolling for changelog", "Restored legacy version history" ] },
+        { "version": "1.0.4", "date": "Jan 14, 2026", "notes": [ "Restored Tab Cloaking and OG tags" ] },
+        { "version": "1.0.3", "date": "Jan 14, 2026", "notes": [ "Restored full engine options & server lists" ] },
+        { "version": "1.0.2", "date": "Jan 14, 2026", "notes": [ "Fixed eaglercraftXOpts error" ] },
+        { "version": "1.0.1", "date": "Jan 12, 2026", "notes": [ "Improve countdown screen", "Refined initial UI layout" ] },
         { "version": "1.0.0 Release", "date": "Jan 12, 2026", "notes": [ "Initial Release of Mineral Project" ] },
-        { "version": "1.0.0 Beta", "date": "Jan 7, 2026", "notes": [ "Initial Beta Release" ] }
+        { "version": "1.0.0 Beta", "date": "Jan 7, 2026", "notes": [ "Initial Beta testing phase" ] }
       ],
       "team": [
         { "name": "Dobberr", "role": "Lead Developer" },
         { "name": "rapid.fast", "role": "Developer" }
       ],
       "eaglercraftOpts": {
+        "demoMode": false,
         "container": "game_frame",
         "assetsURI": "assets.epk",
         "localesURI": "lang/",
         "worldsDB": "worlds",
-        "servers": [{ "addr": "wss://smp.fluxis.xyz", "name": "Mineral - SMP" }],
-        "relays": [{ "addr": "wss://relay.lax1dude.net/", "primary": true }]
+        "logInvalidCerts": true,
+        "crashOnUncaughtExceptions": true,
+        "servers": [
+          { "addr": "wss://smp.fluxis.xyz", "name": "Mineral - SMP" },
+          { "addr": "wss://adderall.ir", "name": "AdderallMC" },
+          { "addr": "wss://mc.voidsent.net", "name": "Voidsent MC" },
+          { "addr": "wss://mc.lamplifesteal.xyz", "name": "Lamp Network" },
+          { "addr": "wss://vanillamc.org", "name": "VanillaMC" },
+          { "addr": "wss://tuff.ws", "name": "TuffNET" }
+        ],
+        "relays": [
+          { "addr": "wss://relay.deev.is/", "comment": "Relay #1" },
+          { "addr": "wss://relay.lax1dude.net/", "comment": "Relay #2" },
+          { "addr": "wss://relay.shhnowisnottheti.me/", "comment": "Relay #3" }
+        ]
       }
     }
     </script>
@@ -71,21 +108,36 @@
             const config = JSON.parse(document.getElementById('mineral-config').textContent);
             let overlay, contentContainer;
 
+            const opts = config.eaglercraftOpts;
+            opts.relays.forEach((r, i) => r.primary = (i === Math.floor(Math.random() * opts.relays.length)));
+            const q = new URLSearchParams(window.location.search);
+            if(q.has("server")) opts.joinServer = q.get("server");
+            
+            window.eaglercraftXOpts = opts;
+
             function initInteractiveLoader() {
                 overlay = document.createElement('div');
-                overlay.className = 'fixed inset-0 bg-zinc-950 flex flex-col items-center justify-center z-[9000]';
+                overlay.className = 'fixed inset-0 bg-zinc-950 flex flex-col items-center justify-center z-[9000] p-4 transition-opacity duration-500';
                 
                 contentContainer = document.createElement('div');
-                contentContainer.className = 'w-11/12 max-w-4xl h-[75vh] relative';
+                contentContainer.className = 'w-11/12 max-w-4xl h-[85vh] flex flex-col items-center justify-center relative';
                 overlay.appendChild(contentContainer);
                 document.body.appendChild(overlay);
 
                 renderWelcome();
             }
 
+            function getLogoHtml() {
+                return `
+                <div class="mb-6 flex flex-col items-center">
+                    <img src="logo.png" class="h-16 md:h-20 object-contain mb-2" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <h1 class="hidden text-3xl font-black text-white tracking-widest uppercase">${config.clientName}</h1>
+                </div>`;
+            }
+
             function renderWelcome() {
                 const card = document.createElement('div');
-                card.className = 'bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl h-full modal-container page-transition opacity-0 scale-95';
+                card.className = 'bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl h-full w-full modal-container page-transition opacity-0 scale-95';
                 
                 const changelogHtml = config.changelog.map(i => `
                     <div class="p-3 rounded-lg bg-zinc-950/50 border border-zinc-800/50 mb-3">
@@ -96,49 +148,42 @@
                     </div>`).join('');
 
                 card.innerHTML = `
-                    <div class="p-8 border-b border-zinc-800 flex justify-between items-start">
+                    <div class="p-6 border-b border-zinc-800 flex justify-between items-start shrink-0">
                         <div>
                             <h2 class="text-3xl font-black text-white tracking-tight">${config.clientName}</h2>
                             <p class="text-zinc-500 text-sm mt-1">${config.clientSubtitle}</p>
                         </div>
-                        <div class="bg-zinc-100 text-zinc-900 px-3 py-1 rounded text-xs font-bold tracking-tighter">
+                        <div class="bg-white text-black px-3 py-1 rounded text-xs font-bold tracking-tighter border-b-2 border-zinc-400 shadow-sm">
                             VER ${config.version}
                         </div>
                     </div>
                     
-                    <div class="scroll-area p-8">
+                    <div class="scroll-area custom-scroll p-6">
                         <div class="mb-8">
-                            <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">Latest Updates</h3>
-                            ${changelogHtml}
+                            <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">Update History</h3>
+                            <div class="max-h-64 overflow-y-auto custom-scroll pr-2 bg-black/20 rounded-xl p-2 border border-zinc-800/40">
+                                ${changelogHtml}
+                            </div>
                         </div>
-                        
                         <div>
-                            <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">Development</h3>
-                            <div class="grid grid-cols-2 gap-4">
-                                ${config.team.map(m => `
-                                    <div class="bg-zinc-800/50 p-4 rounded-xl border border-zinc-700/30">
-                                        <p class="font-bold text-zinc-100">${m.name}</p>
-                                        <p class="text-[10px] text-zinc-500 uppercase font-bold">${m.role}</p>
-                                    </div>
-                                `).join('')}
+                            <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">Development Team</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                ${config.team.map(m => `<div class="bg-zinc-800/50 p-4 rounded-xl border border-zinc-700/30"><p class="font-bold text-zinc-100">${m.name}</p><p class="text-[10px] text-zinc-500 uppercase font-bold">${m.role}</p></div>`).join('')}
                             </div>
                         </div>
                     </div>
                     
-                    <div class="p-6 bg-zinc-950/50 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div class="text-zinc-500 text-[11px] font-medium tracking-tight">
+                    <div class="p-6 bg-zinc-950 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
+                        <div class="text-zinc-500 text-[11px] font-medium tracking-tight text-center sm:text-left">
                             <span class="font-bold text-zinc-200">Astra Client</span> by <span class="font-bold text-zinc-200">BarneyTheGod</span>
                             <span class="mx-2 text-zinc-700">•</span>
                             Powered by <span class="font-bold text-zinc-200">EaglercraftX</span> by <span class="font-bold text-zinc-200">lax1dude</span>
                         </div>
-                        
-                        <button id="launchBtn" class="w-full sm:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold shadow-lg transition-all active:scale-95">
-                            Launch Project
-                        </button>
+                        <button id="launchBtn" class="w-full sm:w-auto px-10 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold shadow-lg transition-all active:scale-95">Launch Project</button>
                     </div>
                 `;
                 
-                contentContainer.innerHTML = '';
+                contentContainer.innerHTML = getLogoHtml();
                 contentContainer.appendChild(card);
                 
                 requestAnimationFrame(() => {
@@ -146,11 +191,49 @@
                     card.classList.replace('scale-95', 'scale-100');
                 });
 
-                document.getElementById('launchBtn').onclick = () => {
-                    // Start countdown logic here
+                document.getElementById('launchBtn').onclick = startCountdown;
+            }
+
+            function startCountdown() {
+                const wrap = document.createElement('div');
+                wrap.className = 'w-full h-full flex flex-col items-center justify-center p-8 bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl';
+                wrap.innerHTML = `
+                    <h2 class="text-sm font-bold mb-10 text-zinc-500 tracking-[0.2em] uppercase">${config.countdownTitle}</h2>
+                    <div id="count" class="text-9xl font-black text-white select-none transition-all">5</div>
+                    <div class="w-64 h-1 bg-zinc-800 rounded-full mt-12 overflow-hidden">
+                        <div id="bar" class="h-full bg-blue-600 transition-all duration-1000 ease-linear" style="width: 100%;"></div>
+                    </div>
+                    <p class="mt-8 text-[10px] text-zinc-600 font-mono animate-pulse">[ PRESS ANY KEY TO SKIP ]</p>
+                `;
+                
+                contentContainer.innerHTML = getLogoHtml();
+                contentContainer.appendChild(wrap);
+
+                let count = 5;
+                let active = true;
+
+                const finish = () => {
+                    if(!active) return;
+                    active = false;
                     overlay.style.opacity = '0';
-                    setTimeout(() => { overlay.remove(); if(typeof main === 'function') main(); }, 500);
+                    setTimeout(() => {
+                        overlay.remove();
+                        if (typeof main === 'function') main();
+                    }, 500);
                 };
+
+                const timer = setInterval(() => {
+                    if(!active) { clearInterval(timer); return; }
+                    count--;
+                    if(count <= 0) { clearInterval(timer); finish(); return; }
+                    const el = document.getElementById('count');
+                    const bar = document.getElementById('bar');
+                    if(el) { el.innerText = count; el.classList.add('animate-flash'); setTimeout(() => el.classList.remove('animate-flash'), 300); }
+                    if(bar) bar.style.width = `${(count/5)*100}%`;
+                }, 1000);
+
+                window.addEventListener('keydown', finish, { once: true });
+                window.addEventListener('mousedown', finish, { once: true });
             }
 
             initInteractiveLoader();
