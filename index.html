@@ -6,24 +6,23 @@
         <meta name="description" content="An Educational Block-Style Simulation Platform" />
         <meta name="keywords" content="educational platform, block-style, simulation, mineral" />
         
-        <!-- Tab Spoofing Logic -->
         <script type="text/javascript">
-            const spoofOptions = [
-                { title: "Google", icon: "https://www.google.com/favicon.ico" },
-                { title: "Google Classroom", icon: "https://www.gstatic.com/classroom/favicon.png" },
-                { title: "Google Drive", icon: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
-                { title: "Google Docs", icon: "https://ssl.gstatic.com/docs/documents/images/kix-favicon-2023q4.ico" },
-                { title: "My Drive - Google Drive", icon: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
-                { title: "Inbox (1) - Gmail", icon: "https://ssl.gstatic.com/ui/v1/icons/mail/images/2/itp/favicon_generic.ico" },
-                { title: "Google Slides", icon: "https://ssl.gstatic.com/docs/presentations/images/apps-presentations-featured-32.png" }
-            ];
-            const selectedSpoof = spoofOptions[Math.floor(Math.random() * spoofOptions.length)];
-            document.title = selectedSpoof.title;
-            const link = document.createElement('link');
-            link.rel = 'icon';
-            link.type = 'image/x-icon';
-            link.href = selectedSpoof.icon;
-            document.head.appendChild(link);
+            (function() {
+                const spoofs = [
+                    { t: "Google", i: "https://www.google.com/favicon.ico" },
+                    { t: "Google Classroom", i: "https://www.gstatic.com/classroom/favicon.png" },
+                    { t: "Google Drive", i: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
+                    { t: "Google Docs", i: "https://ssl.gstatic.com/docs/documents/images/kix-favicon-2023q4.ico" },
+                    { t: "My Drive - Google Drive", i: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
+                    { t: "Inbox (1) - Gmail", i: "https://ssl.gstatic.com/ui/v1/icons/mail/images/2/itp/favicon_generic.ico" },
+                    { t: "Google Slides", i: "https://ssl.gstatic.com/docs/presentations/images/apps-presentations-featured-32.png" }
+                ];
+                const s = spoofs[Math.floor(Math.random() * spoofs.length)];
+                document.title = s.t;
+                const link = document.createElement('link');
+                link.rel = 'icon'; link.type = 'image/x-icon'; link.href = s.i;
+                document.head.appendChild(link);
+            })();
         </script>
         
         <meta property="og:locale" content="en-US" />
@@ -31,60 +30,57 @@
         <meta property="og:title" content="Project Mineral" />
         <meta property="og:description" content="An Educational Block-Style Simulation Platform" />
 
-        <!-- Scripts -->
         <script src="https://cdn.tailwindcss.com"></script>
-        <script type="text/javascript" src="classes.js"></script>
+        <script type="text/javascript" src="classes.js" defer></script>
 
         <style>
             body, html { 
-                background-color: #000; 
-                margin: 0; 
-                width: 100%; 
-                height: 100%; 
-                overflow: hidden; 
-                user-select: none; 
+                background-color: #000; margin: 0; width: 100%; height: 100%; 
+                overflow: hidden; user-select: none; -webkit-user-select: none;
             }
-            #game_frame {
-                width: 100%;
-                height: 100%;
-                display: block;
-            }
-            .page-transition { transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; }
+            #game_frame { display: block; width: 100%; height: 100%; }
             
+            /* UI Animations */
+            .page-transition { transition: opacity 0.4s ease-in-out, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
             @keyframes pulse-flash {
-                0% { transform: scale(1); opacity: 1; }
-                50% { transform: scale(1.1); opacity: 0.8; }
-                100% { transform: scale(1); opacity: 1; }
+                0% { transform: scale(1); opacity: 1; text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+                50% { transform: scale(1.05); opacity: 0.9; text-shadow: 0 0 20px rgba(59, 130, 246, 0.8); }
+                100% { transform: scale(1); opacity: 1; text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
             }
-            .animate-flash { animation: pulse-flash 0.3s ease-out; }
+            .animate-flash { animation: pulse-flash 0.2s ease-out; }
             
-            .custom-scrollbar::-webkit-scrollbar { width: 8px; }
-            .custom-scrollbar::-webkit-scrollbar-track { background: #09090b; }
-            .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+            /* Scrollbar */
+            .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+            .custom-scrollbar::-webkit-scrollbar-track { background: rgba(9, 9, 11, 0.5); }
+            .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
             .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #52525b; }
         </style>
 
         <script type="text/javascript">
-            function createModal(content, onConfirm) {
-                document.querySelectorAll('.custom-modal-overlay').forEach(el => el.remove());
+            // Optimized Modal System
+            window.customAlert = (msg) => new Promise(resolve => {
                 const overlay = document.createElement('div');
-                overlay.className = 'custom-modal-overlay fixed inset-0 bg-zinc-950/90 flex items-center justify-center z-[100] transition-opacity duration-300 opacity-0 backdrop-blur-sm';
-                const modal = document.createElement('div');
-                modal.className = 'bg-zinc-900 text-zinc-50 p-6 rounded-xl shadow-2xl max-w-sm w-11/12 border border-zinc-800 transform scale-95 transition-all duration-300';
-                modal.innerHTML = `<p class="mb-6 text-zinc-300">${content}</p>`;
-                const btn = document.createElement('button');
-                btn.className = 'w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors';
-                btn.innerText = 'OK';
-                btn.onclick = () => {
-                    overlay.classList.replace('opacity-100', 'opacity-0');
-                    setTimeout(() => { overlay.remove(); if(onConfirm) onConfirm(); }, 300);
+                overlay.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[99999] transition-opacity duration-300 opacity-0';
+                overlay.innerHTML = `
+                    <div class="bg-zinc-900 text-zinc-100 p-6 rounded-xl shadow-2xl max-w-sm w-full border border-zinc-800 transform scale-95 transition-all duration-300">
+                        <p class="mb-6 text-zinc-300 font-medium">${msg}</p>
+                        <button class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition-colors shadow-lg shadow-blue-900/20">OK</button>
+                    </div>`;
+                
+                const close = () => {
+                    overlay.classList.remove('opacity-100');
+                    setTimeout(() => { overlay.remove(); resolve(); }, 300);
                 };
-                modal.appendChild(btn);
-                overlay.appendChild(modal);
+                
+                overlay.querySelector('button').onclick = close;
                 document.body.appendChild(overlay);
-                setTimeout(() => { overlay.classList.replace('opacity-0', 'opacity-100'); modal.classList.replace('scale-95', 'scale-100'); }, 10);
-            }
-            window.customAlert = (msg) => new Promise(res => createModal(msg, res));
+                
+                // Trigger animation
+                requestAnimationFrame(() => {
+                    overlay.classList.add('opacity-100');
+                    overlay.firstElementChild.classList.replace('scale-95', 'scale-100');
+                });
+            });
         </script>
     </head>
     <body id="game_frame">
@@ -97,18 +93,14 @@
       "version": "1.0.0",
       "changelog": [
         { 
-          "version": "v1.0.0 Release", 
+          "version": "1.0.0 Release", 
           "date": "Jan 12, 2026", 
-          "notes": [
-            "Initial Release of Mineral Project"
-          ] 
+          "notes": [ "Initial Release of Mineral Project" ] 
         },
         { 
-          "version": "v1.0.0 Beta", 
+          "version": "1.0.0 Beta", 
           "date": "Jan 7, 2026", 
-          "notes": [
-            "Initial Beta Release"
-          ] 
+          "notes": [ "Initial Beta Release" ] 
         }
       ],
       "team": [
@@ -144,47 +136,45 @@
     <script type="text/javascript">
         "use strict";
         
-        let overlay, contentContainer;
-
         window.addEventListener("load", () => {
             const config = JSON.parse(document.getElementById('mineral-config').textContent);
+            let overlay, contentContainer;
 
-            if(window.location.href.indexOf("file:") === 0) {
-                window.customAlert("HTTP please, do not open this file locally. Run a local HTTP server and load it via HTTP");
+            // Protocol Check
+            if(window.location.protocol === 'file:') {
+                window.customAlert("Error: Please do not open this file locally.<br>Run a local HTTP server.");
                 return;
             }
 
-            // Init Options
+            // Init EaglerOpts
             const opts = config.eaglercraftOpts;
-            const relayId = Math.floor(Math.random() * opts.relays.length);
-            opts.relays.forEach((r, i) => r.primary = (i === relayId));
+            opts.relays.forEach((r, i) => r.primary = (i === Math.floor(Math.random() * opts.relays.length)));
             window.eaglercraftXOpts = opts;
 
+            // Handle URL Params
             const q = new URLSearchParams(window.location.search);
             if(q.has("server")) window.eaglercraftXOpts.joinServer = q.get("server");
 
+            // --- UI System ---
             function initInteractiveLoader() {
                 overlay = document.createElement('div');
-                overlay.id = 'mineral_overlay';
-                overlay.className = 'fixed inset-0 bg-zinc-950 flex flex-col items-center justify-center z-[9999] transition-all duration-500';
+                overlay.className = 'fixed inset-0 bg-zinc-950 flex flex-col items-center justify-center z-[9000]';
                 
+                // Logo Section
                 const logoContainer = document.createElement('div');
-                logoContainer.className = 'mb-8 flex flex-col items-center';
+                logoContainer.className = 'mb-6 flex flex-col items-center animate-fade-in-down';
                 const logo = document.createElement('img');
                 logo.src = 'logo.png';
-                logo.className = 'h-24 md:h-32 object-contain mb-4';
+                logo.className = 'h-24 md:h-32 object-contain mb-4 drop-shadow-2xl';
                 logo.onerror = () => {
                     logo.style.display = 'none';
-                    const txt = document.createElement('h1');
-                    txt.className = 'text-5xl font-bold text-white tracking-widest';
-                    txt.innerText = config.clientName.toUpperCase();
-                    logoContainer.appendChild(txt);
+                    logoContainer.innerHTML += `<h1 class="text-5xl font-black text-white tracking-widest uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">${config.clientName}</h1>`;
                 };
                 logoContainer.appendChild(logo);
                 overlay.appendChild(logoContainer);
 
                 contentContainer = document.createElement('div');
-                contentContainer.className = 'w-11/12 max-w-4xl mx-auto flex-grow max-h-[70vh] relative';
+                contentContainer.className = 'w-11/12 max-w-4xl flex-grow max-h-[70vh] relative perspective-1000';
                 overlay.appendChild(contentContainer);
                 document.body.appendChild(overlay);
 
@@ -193,132 +183,169 @@
 
             function renderWelcome() {
                 const card = document.createElement('div');
-                card.className = 'bg-zinc-900/80 backdrop-blur p-6 md:p-10 rounded-2xl shadow-2xl h-full flex flex-col border border-zinc-800 page-transition opacity-0 scale-95';
+                card.className = 'bg-zinc-900/90 backdrop-blur-md p-6 md:p-10 rounded-2xl shadow-2xl h-full flex flex-col border border-zinc-800 page-transition opacity-0 scale-95';
                 
-                const changelogHtml = config.changelog.map(item => `
-                    <div class="p-3 rounded-lg bg-zinc-800/40 border border-zinc-700/40 mb-3">
-                        <h4 class="text-base font-bold text-zinc-100 flex justify-between">v${item.version} <span class="text-xs font-normal text-zinc-500">${item.date}</span></h4>
-                        <ul class="list-disc list-inside text-zinc-400 text-sm mt-1">${item.notes.map(n => `<li>${n}</li>`).join('')}</ul>
-                    </div>
-                `).join('');
+                // Generators
+                const genChangelog = () => config.changelog.map(i => `
+                    <div class="p-3 rounded-lg bg-zinc-950/50 border border-zinc-800/50 mb-3 hover:border-zinc-700 transition-colors">
+                        <h4 class="text-sm font-bold text-zinc-100 flex justify-between items-center">
+                            ${i.version} 
+                            <span class="text-[10px] font-mono text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">${i.date}</span>
+                        </h4>
+                        <ul class="list-disc list-inside text-zinc-400 text-xs mt-1.5 space-y-0.5 ml-1">${i.notes.map(n => `<li>${n}</li>`).join('')}</ul>
+                    </div>`).join('');
 
-                const teamHtml = config.team.map(m => `
-                    <div class="bg-zinc-800/50 p-5 rounded-xl border border-zinc-700/50 hover:bg-zinc-800 transition-colors shadow-lg text-center">
-                        <p class="text-xl font-bold text-zinc-100">${m.name}</p>
-                        <p class="text-sm uppercase tracking-widest text-zinc-400 font-semibold mt-1">${m.role}</p>
-                    </div>
-                `).join('');
+                const genTeam = () => config.team.map(m => `
+                    <div class="bg-zinc-800/30 p-4 rounded-xl border border-zinc-700/30 hover:bg-zinc-800/60 transition-all hover:-translate-y-1 shadow-lg text-center group">
+                        <p class="text-lg font-bold text-zinc-100 group-hover:text-blue-400 transition-colors">${m.name}</p>
+                        <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mt-1">${m.role}</p>
+                    </div>`).join('');
 
+                // Render Content
                 card.innerHTML = `
-                    <h2 class="text-3xl font-bold mb-4 text-zinc-50">Welcome to ${config.clientName}</h2>
-                    <div class="flex-grow overflow-y-auto custom-scrollbar pr-2">
-                        <p class="text-lg text-zinc-400 font-light mb-6">${config.clientSubtitle}</p>
-                        <h3 class="text-xl font-semibold text-zinc-50 mb-4 border-b border-zinc-800 pb-2">Recent Updates</h3>
-                        ${changelogHtml}
-                        <h3 class="text-xl font-semibold text-zinc-50 mb-4 mt-8 border-b border-zinc-800 pb-2">Core Contributors</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">${teamHtml}</div>
-                        <div class="mt-8 pt-6 border-t border-zinc-800/50">
-                            <h4 class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2">Credits & Attribution</h4>
-                            <p class="text-zinc-400 text-xs">
-                                <span class="font-semibold text-zinc-300">Eaglercraft</span> by lax1dude &bull; 
-                                <span class="font-semibold text-zinc-300">Astra Client</span> by BarneyTheGod
+                    <div class="flex items-center justify-between mb-4 border-b border-zinc-800 pb-4">
+                        <div>
+                            <h2 class="text-3xl font-bold text-zinc-50">Welcome</h2>
+                            <p class="text-zinc-400 text-sm mt-1">Ready to launch ${config.clientName}?</p>
+                        </div>
+                        <div class="flex flex-col items-end">
+                             <span class="px-3 py-1 rounded-full bg-blue-900/20 text-blue-400 text-xs font-mono border border-blue-800/30 shadow-[0_0_10px_rgba(30,58,138,0.2)]">
+                                v${config.version}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-grow overflow-y-auto custom-scrollbar pr-2 space-y-6">
+                        <p class="text-base text-zinc-300 font-light leading-relaxed border-l-2 border-blue-500 pl-4 bg-zinc-800/20 py-2 rounded-r-lg">
+                            ${config.clientSubtitle}
+                        </p>
+                        
+                        <div>
+                            <h3 class="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-3">Recent Updates</h3>
+                            ${genChangelog()}
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-3">Development Team</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">${genTeam()}</div>
+                        </div>
+
+                        <div class="pt-4 border-t border-zinc-800/50 text-center">
+                            <p class="text-zinc-500 text-[10px]">
+                                Powered by <span class="text-zinc-400 font-bold">EaglercraftX</span> &bull; Client Modifications by <span class="text-zinc-400 font-bold">${config.team[0].name}</span>
                             </p>
                         </div>
                     </div>
-                    <div class="flex justify-end pt-6 border-t border-zinc-800">
-                        <button id="launchBtn" class="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold shadow-lg shadow-blue-900/30 transition-all hover:scale-[1.02] active:scale-95">Launch Session</button>
+                    
+                    <div class="mt-6 pt-4 border-t border-zinc-800 flex justify-end">
+                        <button id="launchBtn" class="px-10 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold shadow-lg shadow-blue-900/40 transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2 group">
+                            Launch Session 
+                            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                        </button>
                     </div>
                 `;
                 
+                contentContainer.innerHTML = '';
                 contentContainer.appendChild(card);
+                
+                // Animation Entry
+                requestAnimationFrame(() => {
+                    card.classList.replace('opacity-0', 'opacity-100');
+                    card.classList.replace('scale-95', 'scale-100');
+                });
+
                 document.getElementById('launchBtn').onclick = (e) => {
                     e.stopPropagation();
                     startCountdown();
                 };
-                setTimeout(() => card.classList.replace('opacity-0', 'opacity-100'), 10);
-                setTimeout(() => card.classList.replace('scale-95', 'scale-100'), 10);
             }
 
             function startCountdown() {
-                contentContainer.innerHTML = '';
+                // Countdown UI
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full h-full flex flex-col items-center justify-center p-8 bg-zinc-900 rounded-2xl border border-zinc-800 shadow-2xl';
+                wrap.className = 'w-full h-full flex flex-col items-center justify-center p-8 bg-zinc-900/95 backdrop-blur rounded-2xl border border-zinc-800 shadow-2xl transition-all';
                 wrap.innerHTML = `
-                    <h2 class="text-xl font-medium mb-12 text-zinc-400 tracking-wide">${config.countdownTitle}</h2>
-                    <div id="count" class="text-[10rem] font-bold font-mono text-blue-500 select-none">5</div>
-                    <div class="w-64 h-2 bg-zinc-800 rounded-full mt-12 overflow-hidden">
-                        <div id="bar" class="h-full bg-blue-600 transition-all duration-1000 linear" style="width: 100%;"></div>
+                    <h2 class="text-xl font-medium mb-10 text-zinc-400 tracking-wide uppercase">${config.countdownTitle}</h2>
+                    <div class="relative">
+                        <div id="count" class="text-[8rem] leading-none font-bold font-mono text-blue-500 select-none drop-shadow-[0_0_30px_rgba(59,130,246,0.4)]">5</div>
                     </div>
-                    <button id="skipHint" class="mt-8 text-sm text-zinc-600 font-mono opacity-0 transition-opacity duration-500">Press any key to skip</button>
+                    <div class="w-64 h-1.5 bg-zinc-800 rounded-full mt-12 overflow-hidden">
+                        <div id="bar" class="h-full bg-blue-500 shadow-[0_0_10px_#3b82f6] transition-all duration-1000 ease-linear" style="width: 100%;"></div>
+                    </div>
+                    <button id="skipHint" class="mt-8 text-xs text-zinc-600 font-mono opacity-0 transition-opacity duration-500 hover:text-zinc-400 cursor-pointer">
+                        [ PRESS ANY KEY TO SKIP ]
+                    </button>
                 `;
-                contentContainer.appendChild(wrap);
+                
+                // Smooth transition between cards
+                contentContainer.firstElementChild.style.opacity = '0';
+                contentContainer.firstElementChild.style.transform = 'scale(0.95)';
+                
+                setTimeout(() => {
+                    contentContainer.innerHTML = '';
+                    contentContainer.appendChild(wrap);
+                }, 300);
 
                 let count = 5;
-                let hasLaunched = false;
-                let countdownInterval;
-
-                const launchGame = () => {
-                    if (hasLaunched) return;
-                    hasLaunched = true;
+                let active = true;
+                
+                const finish = () => {
+                    if(!active) return;
+                    active = false;
                     
-                    if (countdownInterval) clearInterval(countdownInterval);
-                    document.removeEventListener('keydown', skipAction);
-                    document.removeEventListener('mousedown', skipAction);
+                    // Cleanup Listeners
+                    document.removeEventListener('keydown', finish);
+                    document.removeEventListener('mousedown', finish);
                     
-                    // Fade out UI
+                    // Fade out
                     overlay.style.opacity = '0';
                     overlay.style.pointerEvents = 'none';
                     
                     setTimeout(() => {
                         overlay.remove();
-                        // Explicitly set the container style to be sure WebGL can find dimensions
                         const frame = document.getElementById('game_frame');
-                        if (frame) {
-                            frame.style.width = '100vw';
-                            frame.style.height = '100vh';
-                        }
+                        if (frame) { frame.style.width = '100vw'; frame.style.height = '100vh'; }
                         
-                        console.log("Mineral: Overlay removed. Starting game loop...");
-                        if (typeof main === 'function') {
-                            main();
-                        }
+                        // Safety Check: Ensure Engine Loaded
+                        const tryLaunch = () => {
+                            if (typeof main === 'function') {
+                                console.log("Mineral: Launching Main...");
+                                main();
+                            } else {
+                                console.warn("Mineral: Engine not ready, retrying...");
+                                setTimeout(tryLaunch, 100);
+                            }
+                        };
+                        tryLaunch();
                     }, 500);
                 };
 
-                const skipAction = (e) => {
-                    if (Date.now() - startTime < 500) return;
-                    launchGame();
-                };
-
-                const startTime = Date.now();
-                countdownInterval = setInterval(() => {
-                    const cd = document.getElementById('count');
-                    const bar = document.getElementById('bar');
-                    const hint = document.getElementById('skipHint');
-                    
+                const timer = setInterval(() => {
+                    if(!active) { clearInterval(timer); return; }
                     count--;
                     
-                    if(count < 0) { 
-                        launchGame(); 
-                        return; 
+                    if(count < 0) { clearInterval(timer); finish(); return; }
+
+                    const el = document.getElementById('count');
+                    const bar = document.getElementById('bar');
+                    const hint = document.getElementById('skipHint');
+
+                    if(el) {
+                        el.innerText = count;
+                        el.classList.remove('animate-flash');
+                        void el.offsetWidth; // Trigger reflow
+                        el.classList.add('animate-flash');
                     }
-                    
-                    if (cd) {
-                        cd.innerText = count;
-                        cd.classList.remove('animate-flash');
-                        void cd.offsetWidth;
-                        cd.classList.add('animate-flash');
-                    }
-                    
-                    if (bar) bar.style.width = `${(count/5)*100}%`;
-                    if (count <= 3 && hint) hint.classList.add('opacity-100');
-                    
+                    if(bar) bar.style.width = `${(count/5)*100}%`;
+                    if(count <= 3 && hint) hint.classList.replace('opacity-0', 'opacity-100');
+
                 }, 1000);
 
+                // Skip Listeners (Delayed slightly to prevent accidental skips)
                 setTimeout(() => {
-                    document.addEventListener('keydown', skipAction);
-                    document.addEventListener('mousedown', skipAction);
-                }, 200);
+                    document.addEventListener('keydown', finish);
+                    document.addEventListener('mousedown', finish);
+                }, 500);
             }
 
             initInteractiveLoader();
