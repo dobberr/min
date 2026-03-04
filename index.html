@@ -31,27 +31,144 @@
         </script>
         
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        
         <script type="text/javascript" src="classes.js" defer></script>
 
         <style>
-            body, html { 
-                background-color: #000; margin: 0; width: 100%; height: 100%; 
-                overflow: hidden; user-select: none; -webkit-user-select: none;
+            :root {
+                --bg-base: #000000;
+                --bg-card: rgba(255, 255, 255, 0.03);
+                --bg-elevated: rgba(255, 255, 255, 0.05);
+                --border: rgba(255, 255, 255, 0.07);
+                --border-hover: rgba(255, 255, 255, 0.12);
+                --text-primary: #fafafa;
+                --text-secondary: #a1a1aa;
+                --text-muted: #52525b;
             }
-            .modal-container { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
-            .scroll-area { flex-grow: 1; overflow-y: auto; padding-right: 8px; }
-            .page-transition { transition: opacity 0.4s ease-in-out, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-            
+
+            * {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+
+            body, html { 
+                background-color: var(--bg-base); 
+                margin: 0; 
+                width: 100%; 
+                height: 100%; 
+                overflow: hidden; 
+                user-select: none; 
+                -webkit-user-select: none;
+            }
+
+            /* Background Glow */
+            .bg-glow {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 100vh;
+                z-index: 0;
+                background: 
+                    radial-gradient(ellipse 120% 80% at 50% -30%, rgba(120, 119, 198, 0.28), transparent 70%),
+                    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.04), transparent 50%);
+                pointer-events: none;
+            }
+
+            /* Dot Grid */
+            .bg-grid {
+                position: fixed;
+                inset: 0;
+                z-index: 1;
+                background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+                background-size: 24px 24px;
+                pointer-events: none;
+                mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0) 80%);
+            }
+
+            /* Card Styling */
+            .modal-card {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                transition: all 0.2s ease;
+            }
+
+            /* Scrollbar */
             .custom-scroll::-webkit-scrollbar { width: 4px; }
             .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-            .custom-scroll::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+            .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+            .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.15); }
 
+            /* Button Styles */
+            .btn-primary {
+                background: #fff;
+                color: #000;
+                font-size: 13px;
+                font-weight: 500;
+                padding: 10px 24px;
+                border-radius: 6px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.15s ease;
+            }
+            .btn-primary:hover { background: #e4e4e7; }
+            .btn-primary:active { transform: scale(0.98); }
+
+            /* Badge */
+            .version-badge {
+                font-size: 10px;
+                font-weight: 600;
+                padding: 4px 8px;
+                border-radius: 4px;
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+                letter-spacing: 0.01em;
+            }
+
+            /* Section Label */
+            .section-label {
+                font-size: 11px;
+                font-weight: 500;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: var(--text-muted);
+            }
+
+            /* Animations */
+            .page-transition { 
+                transition: opacity 0.3s ease, transform 0.3s ease; 
+            }
+            
             @keyframes pulse-flash {
                 0% { transform: scale(1); opacity: 1; }
-                50% { transform: scale(1.1); opacity: 0.8; }
+                50% { transform: scale(1.05); opacity: 0.9; }
                 100% { transform: scale(1); opacity: 1; }
             }
             .animate-flash { animation: pulse-flash 0.3s ease-out; }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(8px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .fade-in { animation: fadeIn 0.4s ease-out both; }
+
+            /* Progress Bar */
+            .progress-bar {
+                height: 2px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 1px;
+                overflow: hidden;
+            }
+            .progress-fill {
+                height: 100%;
+                background: rgba(255, 255, 255, 0.3);
+                transition: width 1s linear;
+            }
         </style>
     </head>
     <body id="game_frame">
@@ -114,10 +231,19 @@
 
             function initInteractiveLoader() {
                 overlay = document.createElement('div');
-                overlay.className = 'fixed inset-0 bg-zinc-950 flex flex-col items-center justify-center z-[9000] p-4 transition-opacity duration-500';
+                overlay.className = 'fixed inset-0 flex flex-col items-center justify-center z-[9000] p-4 transition-opacity duration-500';
+                
+                // Add background layers
+                const bgGlow = document.createElement('div');
+                bgGlow.className = 'bg-glow';
+                overlay.appendChild(bgGlow);
+                
+                const bgGrid = document.createElement('div');
+                bgGrid.className = 'bg-grid';
+                overlay.appendChild(bgGrid);
                 
                 contentContainer = document.createElement('div');
-                contentContainer.className = 'w-11/12 max-w-4xl h-[85vh] flex flex-col items-center justify-center relative';
+                contentContainer.className = 'relative z-10 w-11/12 max-w-xl flex flex-col items-center';
                 overlay.appendChild(contentContainer);
                 document.body.appendChild(overlay);
 
@@ -126,57 +252,62 @@
 
             function getLogoHtml() {
                 return `
-                <div class="mb-6 flex flex-col items-center">
-                    <img src="logo.png" class="h-16 md:h-20 object-contain mb-2" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <h1 class="hidden text-3xl font-black text-white tracking-widest uppercase">${config.clientName}</h1>
+                <div class="mb-6 flex flex-col items-center fade-in">
+                    <img src="logo.png" class="h-20 w-20 rounded-xl object-cover mb-4" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <h1 class="hidden text-2xl font-semibold tracking-tight text-white">${config.clientName}</h1>
                 </div>`;
             }
 
             function renderWelcome() {
                 const card = document.createElement('div');
-                card.className = 'bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl h-full w-full modal-container page-transition opacity-0 scale-95';
+                card.className = 'modal-card w-full flex flex-col page-transition opacity-0';
+                card.style.maxHeight = '70vh';
                 
                 const changelogHtml = config.changelog.map(i => `
-                    <div class="p-3 rounded-lg bg-zinc-950/50 border border-zinc-800/50 mb-3">
-                        <h4 class="text-sm font-bold text-zinc-100 flex justify-between">
-                            ${i.version} <span class="text-[10px] text-zinc-500 font-mono">${i.date}</span>
-                        </h4>
-                        <ul class="text-zinc-400 text-xs mt-1 list-disc list-inside">${i.notes.map(n => `<li>${n}</li>`).join('')}</ul>
+                    <div class="p-3 rounded-lg bg-black/20 border border-white/5">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-medium text-white">${i.version}</span>
+                            <span class="text-[10px] text-zinc-600 font-mono">${i.date}</span>
+                        </div>
+                        <ul class="text-xs text-zinc-500 space-y-0.5">${i.notes.map(n => `<li>• ${n}</li>`).join('')}</ul>
                     </div>`).join('');
 
                 card.innerHTML = `
-                    <div class="p-6 border-b border-zinc-800 flex justify-between items-start shrink-0">
+                    <div class="p-5 border-b border-white/5 flex justify-between items-center shrink-0">
                         <div>
-                            <h2 class="text-3xl font-black text-white tracking-tight">${config.clientName}</h2>
-                            <p class="text-zinc-500 text-sm mt-1">${config.clientSubtitle}</p>
+                            <h2 class="text-lg font-semibold text-white">${config.clientName}</h2>
+                            <p class="text-xs text-zinc-500 mt-0.5">${config.clientSubtitle}</p>
                         </div>
-                        <div class="bg-white text-black px-3 py-1 rounded text-xs font-bold tracking-tighter border-b-2 border-zinc-400 shadow-sm">
-                            V ${config.version}
-                        </div>
+                        <div class="version-badge">v${config.version}</div>
                     </div>
                     
-                    <div class="scroll-area custom-scroll p-6">
-                        <div class="mb-8">
-                            <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">Update History</h3>
-                            <div class="max-h-64 overflow-y-auto custom-scroll pr-2 bg-black/20 rounded-xl p-2 border border-zinc-800/40">
+                    <div class="flex-1 overflow-y-auto custom-scroll p-5 space-y-5">
+                        <div>
+                            <h3 class="section-label mb-3">Update History</h3>
+                            <div class="space-y-2">
                                 ${changelogHtml}
                             </div>
                         </div>
                         <div>
-                            <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">Development Team</h3>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                ${config.team.map(m => `<div class="bg-zinc-800/50 p-4 rounded-xl border border-zinc-700/30"><p class="font-bold text-zinc-100">${m.name}</p><p class="text-[10px] text-zinc-500 uppercase font-bold">${m.role}</p></div>`).join('')}
+                            <h3 class="section-label mb-3">Development Team</h3>
+                            <div class="grid grid-cols-2 gap-2">
+                                ${config.team.map(m => `
+                                    <div class="p-3 rounded-lg bg-black/20 border border-white/5">
+                                        <p class="text-sm font-medium text-white">${m.name}</p>
+                                        <p class="text-[10px] text-zinc-600 uppercase tracking-wider">${m.role}</p>
+                                    </div>
+                                `).join('')}
                             </div>
                         </div>
                     </div>
                     
-                    <div class="p-6 bg-zinc-950 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
-                        <div class="text-zinc-500 text-[11px] font-medium tracking-tight text-center sm:text-left">
-                            <span class="font-bold text-zinc-200">Astra Client</span> by <span class="font-bold text-zinc-200">BarneyTheGod</span>
+                    <div class="p-5 border-t border-white/5 shrink-0">
+                        <div class="text-[10px] text-zinc-600 text-center mb-4 tracking-wide">
+                            <span class="text-zinc-400">Astra Client</span> by BarneyTheGod
                             <span class="mx-2 text-zinc-700">•</span>
-                            Powered by <span class="font-bold text-zinc-200">EaglercraftX</span> by <span class="font-bold text-zinc-200">lax1dude</span>
+                            Powered by <span class="text-zinc-400">EaglercraftX</span> by lax1dude
                         </div>
-                        <button id="launchBtn" class="w-full sm:w-auto px-10 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold shadow-lg transition-all active:scale-95">Launch Project</button>
+                        <button id="launchBtn" class="btn-primary w-full">Launch</button>
                     </div>
                 `;
                 
@@ -185,7 +316,6 @@
                 
                 requestAnimationFrame(() => {
                     card.classList.replace('opacity-0', 'opacity-100');
-                    card.classList.replace('scale-95', 'scale-100');
                 });
 
                 document.getElementById('launchBtn').onclick = startCountdown;
@@ -193,14 +323,15 @@
 
             function startCountdown() {
                 const wrap = document.createElement('div');
-                wrap.className = 'w-full h-full flex flex-col items-center justify-center p-8 bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl';
+                wrap.className = 'modal-card w-full flex flex-col items-center justify-center p-8 page-transition';
+                wrap.style.minHeight = '280px';
                 wrap.innerHTML = `
-                    <h2 class="text-sm font-bold mb-10 text-zinc-500 tracking-[0.2em] uppercase">${config.countdownTitle}</h2>
-                    <div id="count" class="text-9xl font-black text-white select-none transition-all">5</div>
-                    <div class="w-64 h-1 bg-zinc-800 rounded-full mt-12 overflow-hidden">
-                        <div id="bar" class="h-full bg-blue-600 transition-all duration-1000 ease-linear" style="width: 100%;"></div>
+                    <p class="section-label mb-8">${config.countdownTitle}</p>
+                    <div id="count" class="text-6xl font-semibold text-white select-none transition-all mb-8">5</div>
+                    <div class="progress-bar w-48 mb-6">
+                        <div id="bar" class="progress-fill" style="width: 100%;"></div>
                     </div>
-                    <p class="mt-8 text-[10px] text-zinc-600 font-mono animate-pulse">[ PRESS ANY KEY TO SKIP ]</p>
+                    <p class="text-[10px] text-zinc-700 tracking-wider uppercase">Press any key to skip</p>
                 `;
                 
                 contentContainer.innerHTML = getLogoHtml();
@@ -225,7 +356,11 @@
                     if(count <= 0) { clearInterval(timer); finish(); return; }
                     const el = document.getElementById('count');
                     const bar = document.getElementById('bar');
-                    if(el) { el.innerText = count; el.classList.add('animate-flash'); setTimeout(() => el.classList.remove('animate-flash'), 300); }
+                    if(el) { 
+                        el.innerText = count; 
+                        el.classList.add('animate-flash'); 
+                        setTimeout(() => el.classList.remove('animate-flash'), 300); 
+                    }
                     if(bar) bar.style.width = `${(count/5)*100}%`;
                 }, 1000);
 
