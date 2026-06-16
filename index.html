@@ -1,376 +1,290 @@
 <!DOCTYPE html>
-<html style="width:100%;height:100%;background-color:black;">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
-        
-        <meta name="description" content="An Educational Block-Style Simulation Platform" />
-        <meta name="keywords" content="educational platform, block-style, simulation, mineral" />
-        <meta property="og:locale" content="en-US" />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Project Mineral" />
-        <meta property="og:description" content="An Educational Block-Style Simulation Platform" />
+<html lang="en" style="width:100%;height:100%;background-color:#030303;">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+		<meta name="description" content="Play Mineral v2" />
+		<meta name="keywords" content="eaglercraft, eaglercraftx, minecraft, 1.8, 1.8.8, mineral, mantle" />
+		<title>Mineral v2</title>
+		<meta property="og:locale" content="en-US" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Mineral v2" />
+		<meta property="og:description" content="Play Mineral v2" />
+		<meta property="og:image" content="favicon.png" />
+		<link type="image/png" rel="shortcut icon" href="favicon.png" />
 
-        <script type="text/javascript">
-            (function() {
-                const spoofs = [
-                    { t: "Google", i: "https://www.google.com/favicon.ico" },
-                    { t: "Google Classroom", i: "https://www.gstatic.com/classroom/favicon.png" },
-                    { t: "Google Drive", i: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
-                    { t: "Google Docs", i: "https://ssl.gstatic.com/docs/documents/images/kix-favicon-2023q4.ico" },
-                    { t: "My Drive - Google Drive", i: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
-                    { t: "Inbox (1) - Gmail", i: "https://ssl.gstatic.com/ui/v1/icons/mail/images/2/itp/favicon_generic.ico" },
-                    { t: "Google Slides", i: "https://ssl.gstatic.com/docs/presentations/images/apps-presentations-featured-32.png" }
-                ];
-                const s = spoofs[Math.floor(Math.random() * spoofs.length)];
-                document.title = s.t;
-                const link = document.createElement('link');
-                link.rel = 'icon'; link.type = 'image/x-icon'; link.href = s.i;
-                document.head.appendChild(link);
-            })();
-        </script>
-        
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-        
-        <script type="text/javascript" src="classes.js" defer></script>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script>
+			tailwind.config = {
+				theme: {
+					extend: {
+						colors: {
+							zinc: {
+								950: '#060608',
+								900: '#111115',
+								800: '#191922',
+								700: '#252530',
+								400: '#a1a1aa',
+								500: '#71717a'
+							},
+							brand: {
+								cyan: '#00F5FF',
+								blue: '#0038FF'
+							}
+						}
+					}
+				}
+			}
+		</script>
 
-        <style>
-            :root {
-                --bg-base: #000000;
-                --bg-card: rgba(255, 255, 255, 0.03);
-                --bg-elevated: rgba(255, 255, 255, 0.05);
-                --border: rgba(255, 255, 255, 0.07);
-                --border-hover: rgba(255, 255, 255, 0.12);
-                --text-primary: #fafafa;
-                --text-secondary: #a1a1aa;
-                --text-muted: #52525b;
-            }
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+		<style>
+			body {
+				font-family: 'Neue Haas Grotesk Text Pro', 'Plus Jakarta Sans', 'Onest', -apple-system, sans-serif;
+				background-color: #030303;
 
-            * {
-                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-            }
+				/* Deeply extended and smoothed top-down color fade to remove harsh lines */
+				background-image:
+					radial-gradient(ellipse 160% 75% at 50% -20%, rgba(0, 245, 255, 0.14) 0%, rgba(0, 56, 255, 0.06) 45%, rgba(0, 56, 255, 0.01) 75%, rgba(3, 3, 3, 0) 100%),
+					radial-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 0);
+				background-size: 100% 100%, 20px 20px;
+			}
 
-            body, html { 
-                background-color: var(--bg-base); 
-                margin: 0; 
-                width: 100%; 
-                height: 100%; 
-                overflow: hidden; 
-                user-select: none; 
-                -webkit-user-select: none;
-            }
+			.title-font {
+				font-family: 'Neue Haas Grotesk Display Pro', 'Plus Jakarta Sans', sans-serif;
+				font-weight: 800;
+				letter-spacing: -0.04em;
+			}
 
-            /* Background Glow */
-            .bg-glow {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 100vh;
-                z-index: 0;
-                background: 
-                    radial-gradient(ellipse 120% 80% at 50% -30%, rgba(120, 119, 198, 0.28), transparent 70%),
-                    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.04), transparent 50%);
-                pointer-events: none;
-            }
+			/* Custom smooth scrollbar behavior matching premium dashboard panels */
+			.custom-scrollbar {
+				scroll-behavior: smooth;
+			}
+			.custom-scrollbar::-webkit-scrollbar {
+				width: 5px;
+			}
+			.custom-scrollbar::-webkit-scrollbar-track {
+				background: transparent;
+			}
+			.custom-scrollbar::-webkit-scrollbar-thumb {
+				background: #191922;
+				border-radius: 99px;
+			}
+			.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+				background: #252530;
+			}
+		</style>
 
-            /* Dot Grid */
-            .bg-grid {
-                position: fixed;
-                inset: 0;
-                z-index: 1;
-                background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-                background-size: 24px 24px;
-                pointer-events: none;
-                mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0) 80%);
-            }
+		<script type="text/javascript" src="bootstrap.js"></script>
+		<script type="text/javascript">
+			"use strict";
 
-            /* Card Styling */
-            .modal-card {
-                background: var(--bg-card);
-                border: 1px solid var(--border);
-                border-radius: 12px;
-                transition: all 0.2s ease;
-            }
+			// =========================================================================
+			// EASY CHANGELOG CONFIGURATION
+			// Simply add or modify entries here. The launcher will safely render them
+			// and dynamically scale the opacity fade downward for older updates.
+			// =========================================================================
+			var CHANGELOG_DATA = [
+				{
+					version: "2.0.0",
+					date: "June 16, 2026",
+					notes: [
+						"Migrated codebase to support Astra Client v2 features.",
+						"Redesigned desktop launcher portal for direct initialization.",
+						"Configured optimized asset delivery pipelines using assets.epw.",
+						"Updated core relay assignments for online connectivity."
+					]
+				},
+				{
+					version: "1.4.0",
+					date: "Mar 4, 2026",
+					notes: [
+						"Updated UI layout structure.",
+						"Improved canvas scaling across broad aspect ratios."
+					]
+				},
+				{
+					version: "1.3.0",
+					date: "Jan 14, 2026",
+					notes: [
+						"Refined version badge display inside headers.",
+						"Finalized base game canvas layouts."
+					]
+				},
+				{
+					version: "1.2.0",
+					date: "Dec 10, 2025",
+					notes: [
+						"Optimized asset unpack mechanics to reduce load stalls."
+					]
+				}
+			];
 
-            /* Scrollbar */
-            .custom-scroll::-webkit-scrollbar { width: 4px; }
-            .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-            .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
-            .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.15); }
+			window.addEventListener("load", function() {
+				if(window.location.href.indexOf("file:") === 0) {
+					alert("HTTP please, do not open this file locally, run a local HTTP server and load it via HTTP");
+				} else {
 
-            /* Button Styles */
-            .btn-primary {
-                background: #fff;
-                color: #000;
-                font-size: 13px;
-                font-weight: 500;
-                padding: 10px 24px;
-                border-radius: 6px;
-                border: none;
-                cursor: pointer;
-                transition: all 0.15s ease;
-            }
-            .btn-primary:hover { background: #e4e4e7; }
-            .btn-primary:active { transform: scale(0.98); }
+					// %%%%%%%%% launch options %%%%%%%%%%%%
 
-            /* Badge */
-            .version-badge {
-                font-size: 10px;
-                font-weight: 600;
-                padding: 4px 8px;
-                border-radius: 4px;
-                background: rgba(255, 255, 255, 0.1);
-                color: #fff;
-                letter-spacing: 0.01em;
-            }
+					var relayId = Math.floor(Math.random() * 3);
+					window.eaglercraftXOpts = {
+						demoMode: false,
+						container: "game_frame",
+						assetsURI: "assets.epw",
+						worldsDB: "worlds",
+						servers: [
+							/* example: { addr: "ws://localhost:8081/", name: "Local test server" } */
+						],
+						relays: [
+							{ addr: "wss://relay.deev.is/", comment: "lax1dude relay #1", primary: relayId == 0 },
+							{ addr: "wss://relay.lax1dude.net/", comment: "lax1dude relay #2", primary: relayId == 1 },
+							{ addr: "wss://relay.shhnowisnottheti.me/", comment: "ayunami relay #1", primary: relayId == 2 }
+						]
+					};
 
-            /* Section Label */
-            .section-label {
-                font-size: 11px;
-                font-weight: 500;
-                letter-spacing: 0.06em;
-                text-transform: uppercase;
-                color: var(--text-muted);
-            }
+					// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-            /* Animations */
-            .page-transition { 
-                transition: opacity 0.3s ease, transform 0.3s ease; 
-            }
-            
-            @keyframes pulse-flash {
-                0% { transform: scale(1); opacity: 1; }
-                50% { transform: scale(1.05); opacity: 0.9; }
-                100% { transform: scale(1); opacity: 1; }
-            }
-            .animate-flash { animation: pulse-flash 0.3s ease-out; }
+					var q = window.location.search;
+					if((typeof q === "string") && q[0] === "?" && (typeof window.URLSearchParams !== "undefined")) {
+						q = new window.URLSearchParams(q);
+						var s = q.get("server");
+						if(s) window.eaglercraftXOpts.joinServer = s;
+					}
 
-            @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(8px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            .fade-in { animation: fadeIn 0.4s ease-out both; }
+					// Launch handler
+					document.getElementById("launch-btn").addEventListener("click", function() {
+						document.getElementById("launcher-ui").classList.add("hidden");
+						main();
+					});
+				}
+			});
+		</script>
+	</head>
 
-            /* Progress Bar */
-            .progress-bar {
-                height: 2px;
-                background: rgba(255, 255, 255, 0.1);
-                border-radius: 1px;
-                overflow: hidden;
-            }
-            .progress-fill {
-                height: 100%;
-                background: rgba(255, 255, 255, 0.3);
-                transition: width 1s linear;
-            }
-        </style>
-    </head>
-    <body id="game_frame">
-    
-    <script type="application/json" id="mineral-config">
-    {
-      "clientName": "Mineral",
-      "clientSubtitle": "The highly-optimized, community-focused educational block simulation platform.",
-      "countdownTitle": "Preparing Mineral",
-      "version": "1.4.0",
-      "changelog": [
-        { "version": "1.4.0", "date": "Mar 4, 2026", "notes": [ "Updated Design" ] },
-        { "version": "1.3.0", "date": "Jan 14, 2026", "notes": [ "Refined version badge display", "Finalized UI layout" ] },
-        { "version": "1.2.0", "date": "Jan 14, 2026", "notes": [ "Fixed engine initialization crash", "Restored full server/relay lists", "Restored tab cloaking & meta tags", "Pinned attribution footer", "Added nested scrolling for update history" ] },
-        { "version": "1.1.0", "date": "Jan 12, 2026", "notes": [ "Improved countdown screen", "Initial UI refinements" ] },
-        { "version": "1.0.0 Release", "date": "Jan 12, 2026", "notes": [ "Initial Release of Mineral Project" ] },
-        { "version": "1.0.0 Beta", "date": "Jan 7, 2026", "notes": [ "Initial Beta testing phase" ] }
-      ],
-      "team": [
-        { "name": "Dobberr", "role": "Lead Developer" },
-        { "name": "rapid.fast", "role": "Developer" }
-      ],
-      "eaglercraftOpts": {
-        "demoMode": false,
-        "container": "game_frame",
-        "assetsURI": "assets.epk",
-        "localesURI": "lang/",
-        "worldsDB": "worlds",
-        "logInvalidCerts": true,
-        "crashOnUncaughtExceptions": true,
-        "servers": [
-          { "addr": "wss://smp.fluxis.xyz", "name": "Mineral - SMP" },
-          { "addr": "wss://adderall.ir", "name": "AdderallMC" },
-          { "addr": "wss://mc.voidsent.net", "name": "Voidsent MC" },
-          { "addr": "wss://mc.lamplifesteal.xyz", "name": "Lamp Network" },
-          { "addr": "wss://vanillamc.org", "name": "VanillaMC" },
-          { "addr": "wss://tuff.ws", "name": "TuffNET" }
-        ],
-        "relays": [
-          { "addr": "wss://relay.deev.is/", "comment": "Relay #1" },
-          { "addr": "wss://relay.lax1dude.net/", "comment": "Relay #2" },
-          { "addr": "wss://relay.shhnowisnottheti.me/", "comment": "Relay #3" }
-        ]
-      }
-    }
-    </script>
-    
-    <script type="text/javascript">
-        "use strict";
-        
-        window.addEventListener("load", () => {
-            const config = JSON.parse(document.getElementById('mineral-config').textContent);
-            let overlay, contentContainer;
+	<body style="margin:0px;width:100%;height:100%;overflow:hidden;" id="game_frame">
 
-            const opts = config.eaglercraftOpts;
-            opts.relays.forEach((r, i) => r.primary = (i === Math.floor(Math.random() * opts.relays.length)));
-            const q = new URLSearchParams(window.location.search);
-            if(q.has("server")) opts.joinServer = q.get("server");
-            
-            window.eaglercraftXOpts = opts;
+		<div id="launcher-ui" class="absolute inset-0 z-50 flex flex-col items-center justify-center p-4 overflow-hidden select-none">
 
-            function initInteractiveLoader() {
-                overlay = document.createElement('div');
-                overlay.className = 'fixed inset-0 flex flex-col items-center justify-center z-[9000] p-4 transition-opacity duration-500';
-                
-                // Add background layers
-                const bgGlow = document.createElement('div');
-                bgGlow.className = 'bg-glow';
-                overlay.appendChild(bgGlow);
-                
-                const bgGrid = document.createElement('div');
-                bgGrid.className = 'bg-grid';
-                overlay.appendChild(bgGrid);
-                
-                contentContainer = document.createElement('div');
-                contentContainer.className = 'relative z-10 w-11/12 max-w-xl flex flex-col items-center';
-                overlay.appendChild(contentContainer);
-                document.body.appendChild(overlay);
+			<div class="mb-6 flex justify-center">
+				<img src="https://mineral-mantle.laneesports.com/logo.png" alt="Mineral Logo" class="h-20 w-auto object-contain" />
+			</div>
 
-                renderWelcome();
-            }
+			<div class="w-full max-w-[920px] bg-zinc-950/75 border border-zinc-900/80 rounded-xl p-6 flex flex-col max-h-[82vh] backdrop-blur-xl shadow-2xl transition-all duration-300">
 
-            function getLogoHtml() {
-                return `
-                <div class="mb-6 flex flex-col items-center fade-in">
-                    <img src="logo.png" class="h-20 w-20 rounded-xl object-cover mb-4" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <h1 class="hidden text-2xl font-semibold tracking-tight text-white">${config.clientName}</h1>
-                </div>`;
-            }
+				<div class="flex items-start justify-between mb-4">
+					<div>
+						<h1 class="text-2xl title-font tracking-tight text-white uppercase">Mineral</h1>
+						<p class="text-xs text-zinc-500 mt-0.5 font-medium">A Minecraft 1.8.8 web client by Mantle.</p>
+					</div>
+					<span class="text-xs font-semibold bg-zinc-900 text-zinc-400 border border-zinc-800 px-2.5 py-0.5 rounded-md">v2.0.0</span>
+				</div>
 
-            function renderWelcome() {
-                const card = document.createElement('div');
-                card.className = 'modal-card w-full flex flex-col page-transition opacity-0';
-                card.style.maxHeight = '70vh';
-                
-                const changelogHtml = config.changelog.map(i => `
-                    <div class="p-3 rounded-lg bg-black/20 border border-white/5">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-sm font-medium text-white">${i.version}</span>
-                            <span class="text-[10px] text-zinc-600 font-mono">${i.date}</span>
-                        </div>
-                        <ul class="text-xs text-zinc-500 space-y-0.5">${i.notes.map(n => `<li>• ${n}</li>`).join('')}</ul>
-                    </div>`).join('');
+				<hr class="border-zinc-900/60 my-2" />
 
-                card.innerHTML = `
-                    <div class="p-5 border-b border-white/5 flex justify-between items-center shrink-0">
-                        <div>
-                            <h2 class="text-lg font-semibold text-white">${config.clientName}</h2>
-                            <p class="text-xs text-zinc-500 mt-0.5">${config.clientSubtitle}</p>
-                        </div>
-                        <div class="version-badge">v${config.version}</div>
-                    </div>
-                    
-                    <div class="flex-1 overflow-y-auto custom-scroll p-5 space-y-5">
-                        <div>
-                            <h3 class="section-label mb-3">Update History</h3>
-                            <div class="space-y-2">
-                                ${changelogHtml}
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="section-label mb-3">Development Team</h3>
-                            <div class="grid grid-cols-2 gap-2">
-                                ${config.team.map(m => `
-                                    <div class="p-3 rounded-lg bg-black/20 border border-white/5">
-                                        <p class="text-sm font-medium text-white">${m.name}</p>
-                                        <p class="text-[10px] text-zinc-600 uppercase tracking-wider">${m.role}</p>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="p-5 border-t border-white/5 shrink-0">
-                        <div class="text-[10px] text-zinc-600 text-center mb-4 tracking-wide">
-                            <span class="text-zinc-400">Astra Client</span> by BarneyTheGod
-                            <span class="mx-2 text-zinc-700">•</span>
-                            Powered by <span class="text-zinc-400">EaglercraftX</span> by lax1dude
-                        </div>
-                        <button id="launchBtn" class="btn-primary w-full">Launch</button>
-                    </div>
-                `;
-                
-                contentContainer.innerHTML = getLogoHtml();
-                contentContainer.appendChild(card);
-                
-                requestAnimationFrame(() => {
-                    card.classList.replace('opacity-0', 'opacity-100');
-                });
+				<div class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-6 min-h-0 my-3">
 
-                document.getElementById('launchBtn').onclick = startCountdown;
-            }
+					<div class="md:col-span-7 flex flex-col min-h-0">
+						<div class="mb-2">
+							<h3 class="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Update History</h3>
+						</div>
+						<div id="dynamic-changelog" class="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar transition-all duration-500">
+							<script type="text/javascript">
+								if (typeof CHANGELOG_DATA !== 'undefined' && CHANGELOG_DATA.length > 0) {
+									var htmlBuffer = "";
+									for (var i = 0; i < CHANGELOG_DATA.length; i++) {
+										var entry = CHANGELOG_DATA[i];
 
-            function startCountdown() {
-                const wrap = document.createElement('div');
-                wrap.className = 'modal-card w-full flex flex-col items-center justify-center p-8 page-transition';
-                wrap.style.minHeight = '280px';
-                wrap.innerHTML = `
-                    <p class="section-label mb-8">${config.countdownTitle}</p>
-                    <div id="count" class="text-6xl font-semibold text-white select-none transition-all mb-8">5</div>
-                    <div class="progress-bar w-48 mb-6">
-                        <div id="bar" class="progress-fill" style="width: 100%;"></div>
-                    </div>
-                    <p class="text-[10px] text-zinc-700 tracking-wider uppercase">Press any key to skip</p>
-                `;
-                
-                contentContainer.innerHTML = getLogoHtml();
-                contentContainer.appendChild(wrap);
+										// Smoothly stepping down opacity markers for structural depth
+										var opacityClass = "opacity-100";
+										if (i === 1) opacityClass = "opacity-75";
+										if (i === 2) opacityClass = "opacity-50";
+										if (i >= 3) opacityClass = "opacity-35";
 
-                let count = 5;
-                let active = true;
+										htmlBuffer += '<div class="rounded-lg border border-zinc-900 bg-zinc-900/20 p-4 space-y-2 transform transition-all duration-300 hover:border-zinc-800/80 ' + opacityClass + '">';
+										htmlBuffer += '  <div class="flex items-center justify-between">';
+										htmlBuffer += '    <span class="text-sm font-semibold text-white">' + entry.version + '</span>';
+										htmlBuffer += '    <span class="text-xs text-zinc-500 font-medium">' + entry.date + '</span>';
+										htmlBuffer += '  </div>';
+										htmlBuffer += '  <ul class="list-disc list-inside text-xs text-zinc-400 space-y-1.5 pl-1 font-medium">';
 
-                const finish = () => {
-                    if(!active) return;
-                    active = false;
-                    overlay.style.opacity = '0';
-                    setTimeout(() => {
-                        overlay.remove();
-                        if (typeof main === 'function') main();
-                    }, 500);
-                };
+										for (var j = 0; j < entry.notes.length; j++) {
+											htmlBuffer += '    <li>' + entry.notes[j] + '</li>';
+										}
 
-                const timer = setInterval(() => {
-                    if(!active) { clearInterval(timer); return; }
-                    count--;
-                    if(count <= 0) { clearInterval(timer); finish(); return; }
-                    const el = document.getElementById('count');
-                    const bar = document.getElementById('bar');
-                    if(el) { 
-                        el.innerText = count; 
-                        el.classList.add('animate-flash'); 
-                        setTimeout(() => el.classList.remove('animate-flash'), 300); 
-                    }
-                    if(bar) bar.style.width = `${(count/5)*100}%`;
-                }, 1000);
+										htmlBuffer += '  </ul>';
+										htmlBuffer += '</div>';
+									}
+									document.write(htmlBuffer);
+								} else {
+									document.write('<p class="text-xs text-zinc-500 font-medium p-2">No client updates found.</p>');
+								}
+							</script>
+						</div>
+					</div>
 
-                window.addEventListener('keydown', finish, { once: true });
-                window.addEventListener('mousedown', finish, { once: true });
-            }
+					<div class="md:col-span-5 flex flex-col justify-between border-t md:border-t-0 md:border-l border-zinc-900/60 pt-4 md:pt-0 md:pl-6 min-h-0">
+						<div class="space-y-3">
+							<div>
+								<h3 class="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Default Client Keybinds</h3>
+							</div>
 
-            initInteractiveLoader();
-        });
-    </script>
-    </body>
+							<div class="space-y-2 text-xs font-medium">
+								<div class="flex items-center justify-between bg-zinc-900/30 border border-zinc-900/60 rounded-md px-3 py-2.5 shadow-inner">
+									<span class="text-zinc-300 font-medium">
+										Client Mods Menu
+									</span>
+									<kbd class="font-mono text-[11px] font-bold px-2 py-0.5 rounded border border-cyan-500/30 bg-cyan-950/40 text-cyan-400 shadow-[0_0_12px_rgba(0,245,255,0.15)] animate-pulse">
+										Right Shift
+									</kbd>
+								</div>
+
+								<div class="flex items-center justify-between border border-zinc-900/40 rounded-md px-3 py-2 bg-zinc-950/20">
+									<span class="text-zinc-400">Toggle Sprint</span>
+									<kbd class="font-mono text-[11px] font-bold px-2 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-300">
+										R
+									</kbd>
+								</div>
+
+								<div class="flex items-center justify-between border border-zinc-900/40 rounded-md px-3 py-2 bg-zinc-950/20">
+									<span class="text-zinc-400">Camera Zoom</span>
+									<kbd class="font-mono text-[11px] font-bold px-2 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-300">
+										C
+									</kbd>
+								</div>
+
+								<div class="flex items-center justify-between border border-zinc-900/40 rounded-md px-3 py-2 bg-zinc-950/20">
+									<span class="text-zinc-400">Perspective Freelook</span>
+									<kbd class="font-mono text-[11px] font-bold px-2 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-300">
+										F
+									</kbd>
+								</div>
+
+								<div class="flex items-center justify-between border border-zinc-900/40 rounded-md px-3 py-2 bg-zinc-950/20">
+									<span class="text-zinc-400">Toggle Debug/FPS</span>
+									<kbd class="font-mono text-[11px] font-bold px-2 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-300">
+										F3
+									</kbd>
+								</div>
+							</div>
+						</div>
+
+						<div class="text-[10px] text-zinc-600 font-medium pt-6 flex flex-col gap-0.5 items-start">
+							<span>Astra Client by BarneyTheGod</span>
+							<span>Powered by EaglercraftX by lax1dude</span>
+						</div>
+					</div>
+
+				</div>
+
+				<button id="launch-btn" class="w-full inline-flex items-center justify-center rounded-lg bg-white px-4 py-3 text-sm font-bold text-black transition-all hover:bg-zinc-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue tracking-tight mt-2">
+					Launch
+				</button>
+
+			</div>
+		</div>
+
+	</body>
 </html>
