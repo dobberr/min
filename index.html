@@ -12,7 +12,7 @@
 		<meta property="og:description" content="Play Mineral v2" />
 		<meta property="og:image" content="favicon.png" />
 		<link type="image/png" rel="shortcut icon" href="favicon.png" />
-
+		
 		<script src="https://cdn.tailwindcss.com"></script>
 		<script>
 			tailwind.config = {
@@ -44,14 +44,14 @@
 			body {
 				font-family: 'Neue Haas Grotesk Text Pro', 'Plus Jakarta Sans', 'Onest', -apple-system, sans-serif;
 				background-color: #030303;
-
+				
 				/* Deeply extended and smoothed top-down color fade to remove harsh lines */
-				background-image:
+				background-image: 
 					radial-gradient(ellipse 160% 75% at 50% -20%, rgba(0, 245, 255, 0.14) 0%, rgba(0, 56, 255, 0.06) 45%, rgba(0, 56, 255, 0.01) 75%, rgba(3, 3, 3, 0) 100%),
 					radial-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 0);
 				background-size: 100% 100%, 20px 20px;
 			}
-
+			
 			.title-font {
 				font-family: 'Neue Haas Grotesk Display Pro', 'Plus Jakarta Sans', sans-serif;
 				font-weight: 800;
@@ -83,7 +83,7 @@
 
 			// =========================================================================
 			// EASY CHANGELOG CONFIGURATION
-			// Simply add or modify entries here. The launcher will safely render them
+			// Simply add or modify entries here. The launcher will safely render them 
 			// and dynamically scale the opacity fade downward for older updates.
 			// =========================================================================
 			var CHANGELOG_DATA = [
@@ -163,57 +163,57 @@
 			});
 		</script>
 	</head>
-
+	
 	<body style="margin:0px;width:100%;height:100%;overflow:hidden;" id="game_frame">
-
-		<div id="launcher-ui" class="absolute inset-0 z-50 flex flex-col items-center justify-center p-4 overflow-hidden select-none">
-
-			<div class="mb-6 flex justify-center">
-				<img src="https://mantleassets.vercel.app/logo.png" alt="Mineral Logo" class="h-20 w-auto object-contain" />
+		
+		<div id="launcher-ui" class="absolute inset-0 z-50 flex flex-col items-center justify-start md:justify-center p-3 sm:p-4 overflow-y-auto select-none custom-scrollbar bg-[#030303]/40">
+			
+			<div class="mt-4 mb-4 md:mt-0 md:mb-6 flex justify-center shrink-0">
+				<img src="https://mantleassets.vercel.app/logo.png" alt="Mineral Logo" class="h-14 sm:h-20 w-auto object-contain" />
 			</div>
 
-			<div class="w-full max-w-[920px] bg-zinc-950/75 border border-zinc-900/80 rounded-xl p-6 flex flex-col max-h-[82vh] backdrop-blur-xl shadow-2xl transition-all duration-300">
-
-				<div class="flex items-start justify-between mb-4">
+			<div class="w-full max-w-[920px] bg-zinc-950/75 border border-zinc-900/80 rounded-xl p-4 sm:p-6 flex flex-col h-auto max-h-[85vh] sm:max-h-[80vh] backdrop-blur-xl shadow-2xl transition-all duration-300">
+				
+				<div class="flex items-center justify-between mb-3 shrink-0">
 					<div>
-						<h1 class="text-2xl title-font tracking-tight text-white uppercase">Mineral</h1>
-						<p class="text-xs text-zinc-500 mt-0.5 font-medium">A Minecraft 1.8.8 web client by Mantle.</p>
+						<h1 class="text-xl sm:text-2xl title-font tracking-tight text-white uppercase">Mineral</h1>
+						<p class="text-[11px] sm:text-xs text-zinc-500 mt-0.5 font-medium">A Minecraft 1.8.8 web client by Mantle.</p>
 					</div>
-					<span class="text-xs font-semibold bg-zinc-900 text-zinc-400 border border-zinc-800 px-2.5 py-0.5 rounded-md">v2.0.0</span>
+					<span class="text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-400 border border-zinc-800 px-2.5 py-0.5 rounded-md">v2.0.0</span>
 				</div>
 
-				<hr class="border-zinc-900/60 my-2" />
+				<hr class="border-zinc-900/60 my-1 shrink-0" />
 
-				<div class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-6 min-h-0 my-3">
-
-					<div class="md:col-span-7 flex flex-col min-h-0">
-						<div class="mb-2">
+				<div class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 min-h-0 my-2 overflow-y-auto md:overflow-hidden custom-scrollbar">
+					
+					<div class="md:col-span-7 flex flex-col min-h-[180px] md:min-h-0">
+						<div class="mb-2 shrink-0">
 							<h3 class="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Update History</h3>
 						</div>
-						<div id="dynamic-changelog" class="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar transition-all duration-500">
+						<div id="dynamic-changelog" class="flex-1 md:overflow-y-auto pr-1 md:pr-2 space-y-2.5 custom-scrollbar transition-all duration-500">
 							<script type="text/javascript">
 								if (typeof CHANGELOG_DATA !== 'undefined' && CHANGELOG_DATA.length > 0) {
 									var htmlBuffer = "";
 									for (var i = 0; i < CHANGELOG_DATA.length; i++) {
 										var entry = CHANGELOG_DATA[i];
-
+										
 										// Smoothly stepping down opacity markers for structural depth
 										var opacityClass = "opacity-100";
 										if (i === 1) opacityClass = "opacity-75";
 										if (i === 2) opacityClass = "opacity-50";
 										if (i >= 3) opacityClass = "opacity-35";
 
-										htmlBuffer += '<div class="rounded-lg border border-zinc-900 bg-zinc-900/20 p-4 space-y-2 transform transition-all duration-300 hover:border-zinc-800/80 ' + opacityClass + '">';
+										htmlBuffer += '<div class="rounded-lg border border-zinc-900 bg-zinc-900/20 p-3.5 space-y-2 transform transition-all duration-300 hover:border-zinc-800/80 ' + opacityClass + '">';
 										htmlBuffer += '  <div class="flex items-center justify-between">';
-										htmlBuffer += '    <span class="text-sm font-semibold text-white">' + entry.version + '</span>';
-										htmlBuffer += '    <span class="text-xs text-zinc-500 font-medium">' + entry.date + '</span>';
+										htmlBuffer += '    <span class="text-xs sm:text-sm font-semibold text-white">' + entry.version + '</span>';
+										htmlBuffer += '    <span class="text-[11px] sm:text-xs text-zinc-500 font-medium">' + entry.date + '</span>';
 										htmlBuffer += '  </div>';
-										htmlBuffer += '  <ul class="list-disc list-inside text-xs text-zinc-400 space-y-1.5 pl-1 font-medium">';
-
+										htmlBuffer += '  <ul class="list-disc list-inside text-[11px] sm:text-xs text-zinc-400 space-y-1 pl-0.5 font-medium">';
+										
 										for (var j = 0; j < entry.notes.length; j++) {
 											htmlBuffer += '    <li>' + entry.notes[j] + '</li>';
 										}
-
+										
 										htmlBuffer += '  </ul>';
 										htmlBuffer += '</div>';
 									}
@@ -230,48 +230,48 @@
 							<div>
 								<h3 class="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Default Client Keybinds</h3>
 							</div>
-
-							<div class="space-y-2 text-xs font-medium">
-								<div class="flex items-center justify-between bg-zinc-900/30 border border-zinc-900/60 rounded-md px-3 py-2.5 shadow-inner">
+							
+							<div class="space-y-1.5 text-[11px] sm:text-xs font-medium">
+								<div class="flex items-center justify-between bg-zinc-900/30 border border-zinc-900/60 rounded-md px-3 py-2 shadow-inner">
 									<span class="text-zinc-300 font-medium">
 										Client Mods Menu
 									</span>
-									<kbd class="font-mono text-[11px] font-bold px-2 py-0.5 rounded border border-cyan-500/30 bg-cyan-950/40 text-cyan-400 shadow-[0_0_12px_rgba(0,245,255,0.15)] animate-pulse">
+									<kbd class="font-mono text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded border border-cyan-500/30 bg-cyan-950/40 text-cyan-400 shadow-[0_0_12px_rgba(0,245,255,0.15)] animate-pulse whitespace-nowrap">
 										Right Shift
 									</kbd>
 								</div>
 
-								<div class="flex items-center justify-between border border-zinc-900/40 rounded-md px-3 py-2 bg-zinc-950/20">
+								<div class="flex items-center justify-between border border-zinc-900/40 rounded-md px-3 py-1.5 bg-zinc-950/20">
 									<span class="text-zinc-400">Toggle Sprint</span>
-									<kbd class="font-mono text-[11px] font-bold px-2 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-300">
+									<kbd class="font-mono text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-300">
 										R
 									</kbd>
 								</div>
 
-								<div class="flex items-center justify-between border border-zinc-900/40 rounded-md px-3 py-2 bg-zinc-950/20">
+								<div class="flex items-center justify-between border border-zinc-900/40 rounded-md px-3 py-1.5 bg-zinc-950/20">
 									<span class="text-zinc-400">Camera Zoom</span>
-									<kbd class="font-mono text-[11px] font-bold px-2 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-300">
+									<kbd class="font-mono text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-300">
 										C
 									</kbd>
 								</div>
 
-								<div class="flex items-center justify-between border border-zinc-900/40 rounded-md px-3 py-2 bg-zinc-950/20">
+								<div class="flex items-center justify-between border border-zinc-900/40 rounded-md px-3 py-1.5 bg-zinc-950/20">
 									<span class="text-zinc-400">Perspective Freelook</span>
-									<kbd class="font-mono text-[11px] font-bold px-2 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-300">
+									<kbd class="font-mono text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-300">
 										F
 									</kbd>
 								</div>
 
-								<div class="flex items-center justify-between border border-zinc-900/40 rounded-md px-3 py-2 bg-zinc-950/20">
+								<div class="flex items-center justify-between border border-zinc-900/40 rounded-md px-3 py-1.5 bg-zinc-950/20">
 									<span class="text-zinc-400">Toggle Debug/FPS</span>
-									<kbd class="font-mono text-[11px] font-bold px-2 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-300">
+									<kbd class="font-mono text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-300">
 										F3
 									</kbd>
 								</div>
 							</div>
 						</div>
 
-						<div class="text-[10px] text-zinc-600 font-medium pt-6 flex flex-col gap-0.5 items-start">
+						<div class="text-[10px] text-zinc-600 font-medium pt-4 pb-2 md:pb-0 flex flex-col gap-0.5 items-start shrink-0">
 							<span>Astra Client by BarneyTheGod</span>
 							<span>Powered by EaglercraftX by lax1dude</span>
 						</div>
@@ -279,7 +279,7 @@
 
 				</div>
 
-				<button id="launch-btn" class="w-full inline-flex items-center justify-center rounded-lg bg-white px-4 py-3 text-sm font-bold text-black transition-all hover:bg-zinc-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue tracking-tight mt-2">
+				<button id="launch-btn" class="w-full inline-flex items-center justify-center rounded-lg bg-white px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-black transition-all hover:bg-zinc-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue tracking-tight mt-1 shrink-0">
 					Launch
 				</button>
 
