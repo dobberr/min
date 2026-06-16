@@ -194,18 +194,36 @@
 
                     // Launch handler
                     document.getElementById("launch-btn").addEventListener("click", function() {
-                        var uiElement = document.getElementById("launcher-ui");
-                        if (uiElement) {
-                            uiElement.remove(); // Safely teardown layout completely to let canvas handle mouse pointer locks
+                        document.getElementById("launcher-ui").classList.add("hidden");
+                        
+                        // Force layout updates and focus context inside iframe wrappers
+                        var container = document.getElementById("game_frame");
+                        if(container) {
+                            container.focus();
                         }
+                        
                         main();
+
+                        // Enforce lock capture on first canvas container click
+                        setTimeout(function() {
+                            var canvas = container.querySelector("canvas");
+                            if(canvas) {
+                                canvas.focus();
+                                canvas.click();
+                            }
+                        }, 100);
+                    });
+
+                    // Direct event wrapper to bypass iframe cross-origin focus restrictions on click return
+                    document.getElementById("game_frame").addEventListener("mousedown", function() {
+                        window.focus();
                     });
                 }
             });
         </script>
     </head>
     
-    <body style="margin:0px;width:100%;height:100%;overflow:hidden;" id="game_frame">
+    <body style="margin:0px;width:100%;height:100%;overflow:hidden;" id="game_frame" tabindex="0">
         
         <div id="launcher-ui" class="absolute inset-0 z-50 flex flex-col items-center justify-start md:justify-center p-3 sm:p-4 overflow-y-auto select-none custom-scrollbar bg-[#030303]/40">
             
