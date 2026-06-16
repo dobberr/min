@@ -194,7 +194,10 @@
 
                     // Launch handler
                     document.getElementById("launch-btn").addEventListener("click", function() {
-                        document.getElementById("launcher-ui").classList.add("hidden");
+                        var uiElement = document.getElementById("launcher-ui");
+                        if (uiElement) {
+                            uiElement.remove(); // Safely teardown layout completely to let canvas handle mouse pointer locks
+                        }
                         main();
                     });
                 }
