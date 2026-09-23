@@ -1,457 +1,818 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" style="width: 100%; height: 100%; background-color: #09090b">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"
     />
     <meta
       name="description"
-      content="Play Minecraft 26.1.2 in your browser - EaglerCraftX"
+      content="Mineral - Play Minecraft in your browser"
     />
-    <meta name="theme-color" content="#1a1a2e" />
-    <meta property="og:title" content="EaglerCraftX 26.1.2" />
+    <meta
+      name="keywords"
+      content="mineral, mantle, minecraft, eaglercraft, 1.12, 1.12.2, web client"
+    />
+    <title>Mineral - Web Minecraft Client by Mantle</title>
+    <meta property="og:locale" content="en-US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Mineral - Web Minecraft Client" />
     <meta
       property="og:description"
-      content="Play Minecraft 26.1.2 in your browser"
+      content="A high-performance browser client for Minecraft, engineered by Mantle."
     />
-    <meta property="og:type" content="website" />
-    <title>EaglerCraftX 26.1.2</title>
-    <link rel="icon" type="image/png" href="favicon.png" />
+    <meta
+      property="og:image"
+      content="https://mantleunblocked.github.io/assets/logo.png"
+    />
+    <link
+      type="image/png"
+      rel="shortcut icon"
+      href="https://mantleunblocked.github.io/assets/logo.png"
+    />
     <style>
+      :root {
+        --bg-main: #09090b;
+        --bg-card: #18181b;
+        --bg-subtle: #27272a;
+        --border-color: #27272a;
+        --border-subtle: #3f3f46;
+        --text-primary: #fafafa;
+        --text-secondary: #a1a1aa;
+        --text-muted: #71717a;
+        --accent-primary: #fafafa;
+        --accent-primary-text: #09090b;
+        --accent-primary-hover: #e4e4e7;
+        --radius-md: 6px;
+        --radius-sm: 4px;
+      }
+
       * {
+        box-sizing: border-box;
         margin: 0;
         padding: 0;
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background: #1a1a2e;
       }
 
-      /* Loading screen */
-      #loading-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
+      body,
+      html {
         width: 100%;
         height: 100%;
-        background: linear-gradient(
-          135deg,
-          #1a1a2e 0%,
-          #16213e 50%,
-          #0f3460 100%
-        );
+        background-color: var(--bg-main);
+        color: var(--text-primary);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden;
+      }
+
+      /* Pre-Game Launcher Screen */
+      #launcher_overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background-color: var(--bg-main);
         display: flex;
         flex-direction: column;
+        overflow-y: auto;
+      }
+
+      .mineral-header {
+        border-bottom: 1px solid var(--border-color);
+        padding: 16px 32px;
+        display: flex;
         align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        color: #e0e0e0;
-        font-family: "Segoe UI", system-ui, sans-serif;
-        transition: opacity 0.5s ease-out;
-      }
-      #loading-screen.hidden {
-        opacity: 0;
-        pointer-events: none;
+        justify-content: space-between;
+        background-color: var(--bg-main);
       }
 
-      .loading-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        background: linear-gradient(90deg, #00d2ff, #3a7bd5, #00d2ff);
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: shimmer 3s linear infinite;
-      }
-      .loading-subtitle {
-        font-size: 1rem;
-        opacity: 0.7;
-        margin-bottom: 2rem;
+      .mineral-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
       }
 
-      .progress-container {
-        width: 320px;
-        height: 6px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 3px;
-        overflow: hidden;
-        margin-bottom: 0.75rem;
-      }
-      .progress-bar {
-        height: 100%;
-        width: 0%;
-        border-radius: 3px;
-        background: linear-gradient(90deg, #3a7bd5, #00d2ff);
-        transition: width 0.3s ease;
-      }
-      .progress-text {
-        font-size: 0.85rem;
-        opacity: 0.6;
+      .mineral-brand-logo {
+        height: 28px;
+        width: auto;
+        display: block;
       }
 
-      @keyframes shimmer {
-        to {
-          background-position: 200% center;
+      .mineral-mantle-logo {
+        height: 20px;
+        width: auto;
+        display: block;
+      }
+
+      .mineral-brand-divider {
+        width: 1px;
+        height: 16px;
+        background-color: var(--border-color);
+      }
+
+      .mineral-badge {
+        font-size: 12px;
+        font-weight: 500;
+        padding: 2px 8px;
+        border-radius: var(--radius-sm);
+        background-color: var(--bg-subtle);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-subtle);
+      }
+
+      .mineral-main-container {
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 32px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        flex: 1;
+      }
+
+      @media (min-width: 900px) {
+        .mineral-main-container {
+          grid-template-columns: 1.15fr 0.85fr;
         }
       }
 
-      /* Game canvas */
-      #game_frame {
-        width: 100vw;
-        height: 100vh;
-        display: block;
-        background: #000;
-        outline: none;
-      }
-
-      /* Error overlay */
-      #error-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.85);
-        display: none;
-        z-index: 2000;
-        color: #ff4444;
-        font-family: "Courier New", monospace;
-        padding: 2rem;
-        overflow: auto;
-      }
-      #error-overlay.visible {
+      .mineral-card {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 24px;
         display: flex;
         flex-direction: column;
+        gap: 20px;
       }
-      .error-title {
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin-bottom: 1rem;
-        color: #ff6666;
+
+      .mineral-card-header {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
       }
-      .error-msg {
-        font-size: 0.9rem;
-        color: #ccc;
-        white-space: pre-wrap;
-        word-break: break-all;
+
+      .mineral-card-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .mineral-card-subtitle {
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      .mineral-hero-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .mineral-hero-logo {
+        width: 52px;
+        height: 52px;
+        object-fit: contain;
+      }
+
+      .mineral-title-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .mineral-hero-name {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+
+      .mineral-hero-author {
+        font-size: 13px;
+        color: var(--text-secondary);
+        font-weight: 400;
+      }
+
+      .mineral-hero-description {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+
+      .mineral-launch-bar {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background-color: var(--bg-main);
+        border: 1px solid var(--border-color);
+        padding: 16px;
+        border-radius: var(--radius-md);
+      }
+
+      .mineral-btn-primary {
+        width: 100%;
+        padding: 12px 24px;
+        background-color: var(--accent-primary);
+        color: var(--accent-primary-text);
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: var(--radius-md);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .mineral-btn-primary:hover {
+        background-color: var(--accent-primary-hover);
+      }
+
+      .mineral-launch-options {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      .mineral-checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .mineral-checkbox {
+        accent-color: var(--text-primary);
+        width: 15px;
+        height: 15px;
+        cursor: pointer;
+      }
+
+      /* Keybinds Grid Styling */
+      .mineral-keybinds-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+      }
+
+      .mineral-keybind-item {
+        background-color: var(--bg-main);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .mineral-keybind-label {
+        font-size: 12px;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      .mineral-keybind-keys {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .mineral-keybind-alt {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .mineral-kbd {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--bg-subtle);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 2px 6px;
+        min-width: 22px;
+        height: 22px;
+      }
+
+      /* Changelog Styles */
+      .mineral-scroll {
+        overflow-y: auto;
+        max-height: 400px;
+        padding-right: 8px;
+      }
+
+      .mineral-scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .mineral-scroll::-webkit-scrollbar-track {
+        background: var(--bg-main);
+        border-radius: var(--radius-sm);
+      }
+
+      .mineral-scroll::-webkit-scrollbar-thumb {
+        background: var(--border-subtle);
+        border-radius: var(--radius-sm);
+      }
+
+      .mineral-log-entry {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .mineral-log-entry:last-child {
+        border-bottom: none;
+      }
+
+      .mineral-log-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+      }
+
+      .mineral-log-version {
+        font-weight: 600;
+        font-size: 13px;
+        color: var(--text-primary);
+        background-color: var(--bg-subtle);
+        border: 1px solid var(--border-subtle);
+        padding: 2px 8px;
+        border-radius: var(--radius-sm);
+      }
+
+      .mineral-log-date {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .mineral-log-notes {
+        margin: 0;
+        padding-left: 20px;
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+
+      .mineral-log-notes li {
+        margin-bottom: 2px;
+      }
+
+      .mineral-log-notes li:empty {
+        display: none;
+      }
+
+      /* Footer Styling */
+      .mineral-footer {
+        border-top: 1px solid var(--border-color);
+        padding: 16px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--text-muted);
+        background-color: var(--bg-main);
+      }
+
+      .mineral-footer-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .mineral-footer-logo {
+        height: 16px;
+        width: auto;
+      }
+
+      .mineral-svg-icon {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
       }
     </style>
-  </head>
-  <body>
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-      <div class="loading-title">Mineral</div>
-      <div class="loading-subtitle">Minecraft in your browser</div>
-      <div class="progress-container">
-        <div class="progress-bar" id="progress-bar"></div>
-      </div>
-      <div class="progress-text" id="progress-text">Initializing...</div>
-    </div>
+    <script type="text/javascript" src="bootstrap.js"></script>
+    <script type="text/javascript">
+      "use strict";
+      window.addEventListener("load", function () {
+        if (window.location.href.indexOf("file:") === 0) {
+          alert(
+            "HTTP please, do not open this file locally, run a local HTTP server and load it via HTTP",
+          );
+        } else {
+          // %%%%%%%%% launch options %%%%%%%%%%%%
 
-    <!-- Game Canvas -->
-    <canvas id="game_frame" tabindex="1"></canvas>
+          var relayId = Math.floor(Math.random() * 3);
+          window.eaglercraftXOpts = {
+            demoMode: false,
+            container: "game_frame",
+            assetsURI: "assets.epw",
+            worldsDB: "worlds",
+            servers: [
+              /* example: { addr: "ws://localhost:8081/", name: "Local test server" } */
+            ],
+            relays: [
+              {
+                addr: "wss://relay.deev.is/",
+                comment: "lax1dude relay #1",
+                primary: relayId == 0,
+              },
+              {
+                addr: "wss://relay.lax1dude.net/",
+                comment: "lax1dude relay #2",
+                primary: relayId == 1,
+              },
+              {
+                addr: "wss://relay.shhnowisnottheti.me/",
+                comment: "ayunami relay #1",
+                primary: relayId == 2,
+              },
+            ],
+          };
 
-    <!-- Title Screen Overlay (shown after WebGL2 initializes) -->
-    <div
-      id="title-overlay"
-      style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 100;
-        display: none;
-        font-family: &quot;Segoe UI&quot;, system-ui, sans-serif;
-      "
-    >
-      <div
-        style="
-          position: absolute;
-          top: 12%;
-          left: 50%;
-          transform: translateX(-50%);
-          text-align: center;
-        "
-      >
-        <div
-          style="
-            font-size: 3rem;
-            font-weight: 800;
-            color: #fff;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-            letter-spacing: 2px;
-          "
-        >
-          EaglerCraftX
-        </div>
-        <div
-          style="
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-top: 4px;
-          "
-        >
-          Minecraft 26.1.2
-        </div>
-      </div>
-      <div
-        style="
-          position: absolute;
-          bottom: 8%;
-          left: 50%;
-          transform: translateX(-50%);
-          text-align: center;
-        "
-      >
-        <div style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.6)">
-          WebGL2 Client - Protocol 775
-        </div>
-        <div
-          style="
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.4);
-            margin-top: 4px;
-          "
-          id="title-fps"
-        ></div>
-      </div>
-      <div
-        style="
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          text-align: center;
-        "
-      >
-        <div
-          style="
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.7);
-            padding: 12px 24px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-          "
-        >
-          MC 26.1.2 classes compiling via TeaVM - Game engine port in progress
-        </div>
-      </div>
-    </div>
+          // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    <!-- Error Overlay -->
-    <div id="error-overlay">
-      <div class="error-title">Game Crashed</div>
-      <div class="error-msg" id="error-msg"></div>
-    </div>
-
-    <script>
-      // ============================================================
-      // EaglerCraftX 26.1.2 Configuration
-      // ============================================================
-      // IMPORTANT: Change these settings to match your setup!
-      //
-      // - "servers": List of WebSocket servers the client can connect to.
-      //   You CANNOT host WebSocket game servers on Vercel. You need a
-      //   separate server (VPS, Docker, etc.) running EaglercraftXBungee
-      //   or EaglercraftXVelocity gateway plugin connected to your
-      //   Minecraft Java Edition server.
-      //
-      // - "relays": Shared world (LAN) relay servers for singleplayer
-      //   invite codes. These also cannot run on Vercel.
-      //
-      // - "assetsURI": Path to the compiled assets EPK file
-      // - "localesURI": Path to language files directory
-      // ============================================================
-
-      var relayId = Math.floor(Math.random() * 3);
-
-      window.eaglercraftXOpts = {
-        container: "game_frame",
-        assetsURI: "assets.epk",
-        localesURI: "lang/",
-        worldsDB: "worlds",
-        resourcePacksDB: "resourcePacks",
-        localStorageNamespace: "_eaglercraftX26",
-
-        // ====== Multiplayer servers (pre-added to the server list) ======
-        // To pre-configure servers, add entries here. Each entry supports
-        // both "addr" (classic 1.8 key) and "address" (26.x Java key):
-        //   { addr: "wss://your-vps.example.com/", address: "wss://your-vps.example.com/", name: "My MC Server" }
-        // For local testing with a gateway on your machine:
-        //   { addr: "ws://localhost:8081/", address: "ws://localhost:8081/", name: "Local Server" }
-        servers: [
-          {
-            addr: "wss://mineralsmp-mantle.laneesports.com/",
-            address: "wss://mineralsmp-mantle.laneesports.com/",
-            name: "Mineral SMP [OFFICIAL]",
-          },
-        ],
-
-        // Auto-connect options (disabled by default, enable to join on load)
-        autoConnect: false,
-        defaultServerURI: "",
-        autoJoin: "",
-
-        // ====== Shared-world relay servers (singleplayer invite codes) ======
-        // To pre-configure relays, add entries here. "primary" marks the
-        // default relay; only one entry should have primary: true.
-        relays: [
-          {
-            addr: "wss://relay.deev.is/",
-            comment: "lax1dude relay #1",
-            name: "lax1dude relay #1",
-            primary: relayId == 0,
-          },
-          {
-            addr: "wss://relay.lax1dude.net/",
-            comment: "lax1dude relay #2",
-            name: "lax1dude relay #2",
-            primary: relayId == 1,
-          },
-          {
-            addr: "wss://relay.shhnowisnottheti.me/",
-            comment: "ayunami relay #1",
-            name: "ayunami relay #1",
-            primary: relayId == 2,
-          },
-        ],
-
-        // ====== Misc / usual 1.8-style flags ======
-        demoMode: false,
-        allowVoiceClient: true,
-        allowFNAWSkins: true,
-        enableDownloadOfflineButton: true,
-        html5CursorSupport: true,
-        enableMinceraft: true,
-
-        // ====== 26.x client config (read via IClientConfig) ======
-        lang: "en_US",
-        renderDistance: 8,
-        smoothLighting: true,
-        enableF3Debug: true,
-        verboseCrashScreen: true,
-        enableVoiceChat: true,
-        enableMultiplayer: true,
-        enableIntegratedServer: true,
-        enableCommandBlocks: true,
-        enableShaderEditor: false,
-        fixedTimeStep: false,
-        fixedTimeStepMs: 50,
-        audioSampleRate: 48000,
-        useOffscreenCanvas: true,
-      };
-
-      // ============================================================
-      // Loading screen logic
-      // ============================================================
-      var progressBar = document.getElementById("progress-bar");
-      var progressText = document.getElementById("progress-text");
-      var loadingScreen = document.getElementById("loading-screen");
-      var errorOverlay = document.getElementById("error-overlay");
-      var errorMsg = document.getElementById("error-msg");
-
-      function setProgress(pct, text) {
-        progressBar.style.width = pct + "%";
-        if (text) progressText.textContent = text;
-      }
-
-      window.__eaglercraftLoadingProgress = function (pct, text) {
-        setProgress(pct, text);
-      };
-
-      // Called by the real game when it's ready to show the canvas
-      window.__eaglercraftReady = function () {
-        setTimeout(function () {
-          loadingScreen.classList.add("hidden");
-          setTimeout(function () {
-            loadingScreen.style.display = "none";
-            // Show the title screen overlay
-            document.getElementById("title-overlay").style.display = "block";
-            // Update FPS counter periodically
-            var fpsEl = document.getElementById("title-fps");
-            var lastTime = performance.now();
-            var frameCount = 0;
-            function updateFPS() {
-              frameCount++;
-              var now = performance.now();
-              if (now - lastTime >= 1000) {
-                if (fpsEl) fpsEl.textContent = frameCount + " FPS";
-                frameCount = 0;
-                lastTime = now;
+          var q = window.location.search;
+          if (
+            typeof q === "string" &&
+            q[0] === "?" &&
+            typeof window.URLSearchParams !== "undefined"
+          ) {
+            q = new window.URLSearchParams(q);
+            var s = q.get("server");
+            if (s) {
+              window.eaglercraftXOpts.joinServer = s;
+              var serverIndicator = document.getElementById(
+                "mineral-server-status",
+              );
+              if (serverIndicator) {
+                serverIndicator.textContent = "Direct Server Target: " + s;
+                serverIndicator.style.display = "block";
               }
-              requestAnimationFrame(updateFPS);
             }
-            requestAnimationFrame(updateFPS);
-          }, 500);
-        }, 300);
-      };
-
-      // Also listen for the CustomEvent dispatched by TeaVM-compiled code
-      window.addEventListener("eaglercraftReady", function () {
-        if (typeof window.__eaglercraftReady === "function") {
-          window.__eaglercraftReady();
+          }
         }
       });
 
-      window.onerror = function (msg, url, line, col, err) {
-        errorOverlay.classList.add("visible");
-        errorMsg.textContent =
-          "Error: " +
-          msg +
-          "\n\n" +
-          "File: " +
-          url +
-          "\n" +
-          "Line: " +
-          line +
-          ", Col: " +
-          col +
-          "\n\n" +
-          (err && err.stack ? err.stack : "");
-        return true;
-      };
+      function launchMineral() {
+        var launcher = document.getElementById("launcher_overlay");
+        var gameFrame = document.getElementById("game_frame");
 
-      // Start loading
-      setProgress(5, "Downloading game (~15MB)...");
-
-      // Load the compiled game script
-      var script = document.createElement("script");
-      script.src = "classes.js";
-      script.onload = function () {
-        console.log("[EaglerCraft] classes.js loaded, calling main()...");
-        setProgress(50, "Starting game engine...");
-        // TeaVM exports a UMD module with main() — call it
-        setTimeout(function () {
-          try {
-            if (typeof self.main === "function") {
-              console.log("[EaglerCraft] Calling self.main()...");
-              self.main(null);
-            } else {
-              console.error("[EaglerCraft] main() not found in global scope!");
-            }
-          } catch (e) {
-            console.error("[EaglerCraft] Error: " + e.message);
-            console.error(e.stack);
+        var fsCheckbox = document.getElementById("mineral-fullscreen-opt");
+        if (fsCheckbox && fsCheckbox.checked) {
+          var doc = document.documentElement;
+          if (doc.requestFullscreen) {
+            doc.requestFullscreen().catch(function () {});
+          } else if (doc.webkitRequestFullscreen) {
+            doc.webkitRequestFullscreen();
           }
-        }, 100);
-      };
-      script.onerror = function () {
-        errorOverlay.classList.add("visible");
-        errorMsg.textContent =
-          "Failed to load classes.js!\n\n" +
-          "Make sure the game is compiled and classes.js is in the same directory as index.html.\n\n" +
-          "Run: ./build_compile.sh to compile the client.";
-      };
-      document.head.appendChild(script);
+        }
+
+        if (launcher) launcher.style.display = "none";
+        if (gameFrame) gameFrame.style.display = "block";
+
+        if (typeof main === "function") {
+          main();
+        } else {
+          console.error("Mineral Engine Error: main() function not available.");
+        }
+      }
     </script>
+  </head>
+  <body>
+    <!-- PRE-GAME LAUNCH SCREEN OVERLAY -->
+    <div id="launcher_overlay">
+      <header class="mineral-header">
+        <div class="mineral-brand">
+          <img
+            src="https://mantleunblocked.github.io/assets/logo.png"
+            alt="Mineral Logo"
+            class="mineral-brand-logo"
+          />
+          <div class="mineral-brand-divider"></div>
+          <img
+            src="https://mantleunblocked.github.io/assets/full%20logo.png"
+            alt="Mantle Logo"
+            class="mineral-mantle-logo"
+          />
+        </div>
+        <span class="mineral-badge">v3.0</span>
+      </header>
+
+      <main class="mineral-main-container">
+        <!-- LEFT PANEL: HERO & CONTROLS -->
+        <section style="display: flex; flex-direction: column; gap: 24px">
+          <!-- CLIENT INFO CARD -->
+          <div class="mineral-card">
+            <div class="mineral-hero-header">
+              <img
+                src="https://mantleunblocked.github.io/assets/logo.png"
+                alt="Mineral"
+                class="mineral-hero-logo"
+              />
+              <div class="mineral-title-wrapper">
+                <h1 class="mineral-hero-name">Mineral</h1>
+                <span class="mineral-hero-author">by Mantle</span>
+              </div>
+            </div>
+            <p class="mineral-hero-description">
+              A high-performance browser client for Minecraft, engineered by
+              Mantle for seamless gameplay.
+            </p>
+
+            <!-- LAUNCH BAR -->
+            <div class="mineral-launch-bar">
+              <button
+                type="button"
+                class="mineral-btn-primary"
+                onclick="launchMineral()"
+              >
+                <svg class="mineral-svg-icon" viewBox="0 0 24 24">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Launch Mineral
+              </button>
+              <div class="mineral-launch-options">
+                <label class="mineral-checkbox-label">
+                  <input
+                    type="checkbox"
+                    id="mineral-fullscreen-opt"
+                    class="mineral-checkbox"
+                    checked
+                  />
+                  Launch in full screen
+                </label>
+                <span
+                  id="mineral-server-status"
+                  style="
+                    display: none;
+                    font-size: 12px;
+                    color: var(--text-muted);
+                  "
+                ></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- DEFAULT KEYBINDS CARD -->
+          <div class="mineral-card">
+            <div class="mineral-card-header">
+              <h2 class="mineral-card-title">
+                <svg class="mineral-svg-icon" viewBox="0 0 24 24">
+                  <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+                  <line x1="6" y1="8" x2="6" y2="8.01"></line>
+                  <line x1="10" y1="8" x2="10" y2="8.01"></line>
+                  <line x1="14" y1="8" x2="14" y2="8.01"></line>
+                  <line x1="18" y1="8" x2="18" y2="8.01"></line>
+                  <line x1="6" y1="12" x2="6" y2="12.01"></line>
+                  <line x1="10" y1="12" x2="10" y2="12.01"></line>
+                  <line x1="14" y1="12" x2="14" y2="12.01"></line>
+                  <line x1="18" y1="12" x2="18" y2="12.01"></line>
+                  <line x1="8" y1="16" x2="16" y2="16"></line>
+                </svg>
+                Default Controls
+              </h2>
+              <p class="mineral-card-subtitle">
+                Pre-configured control bindings optimized for browser gameplay.
+              </p>
+            </div>
+
+            <!-- EDITABLE KEYBINDS SECTION -->
+            <div class="mineral-keybinds-grid">
+              <div class="mineral-keybind-item">
+                <span class="mineral-keybind-label">Movement</span>
+                <div class="mineral-keybind-keys">
+                  <kbd class="mineral-kbd">W</kbd>
+                  <kbd class="mineral-kbd">A</kbd>
+                  <kbd class="mineral-kbd">S</kbd>
+                  <kbd class="mineral-kbd">D</kbd>
+                </div>
+              </div>
+              <div class="mineral-keybind-item">
+                <span class="mineral-keybind-label">Sprint (Default)</span>
+                <div class="mineral-keybind-keys">
+                  <kbd class="mineral-kbd">R</kbd>
+                  <span class="mineral-keybind-alt">or Double W</span>
+                </div>
+              </div>
+              <div class="mineral-keybind-item">
+                <span class="mineral-keybind-label">Jump</span>
+                <div class="mineral-keybind-keys">
+                  <kbd class="mineral-kbd">Space</kbd>
+                </div>
+              </div>
+              <div class="mineral-keybind-item">
+                <span class="mineral-keybind-label">Sneak</span>
+                <div class="mineral-keybind-keys">
+                  <kbd class="mineral-kbd">Shift</kbd>
+                </div>
+              </div>
+              <div class="mineral-keybind-item">
+                <span class="mineral-keybind-label">Attack / Mine</span>
+                <div class="mineral-keybind-keys">
+                  <kbd class="mineral-kbd">Left Click</kbd>
+                </div>
+              </div>
+              <div class="mineral-keybind-item">
+                <span class="mineral-keybind-label">Use / Place Block</span>
+                <div class="mineral-keybind-keys">
+                  <kbd class="mineral-kbd">Right Click</kbd>
+                </div>
+              </div>
+              <div class="mineral-keybind-item">
+                <span class="mineral-keybind-label">Open Inventory</span>
+                <div class="mineral-keybind-keys">
+                  <kbd class="mineral-kbd">E</kbd>
+                </div>
+              </div>
+              <div class="mineral-keybind-item">
+                <span class="mineral-keybind-label">Drop Item</span>
+                <div class="mineral-keybind-keys">
+                  <kbd class="mineral-kbd">Q</kbd>
+                </div>
+              </div>
+              <div class="mineral-keybind-item">
+                <span class="mineral-keybind-label">Toggle Perspective</span>
+                <div class="mineral-keybind-keys">
+                  <kbd class="mineral-kbd">F5</kbd>
+                </div>
+              </div>
+              <div class="mineral-keybind-item">
+                <span class="mineral-keybind-label">Chat &amp; Commands</span>
+                <div class="mineral-keybind-keys">
+                  <kbd class="mineral-kbd">T</kbd>
+                  <kbd class="mineral-kbd">/</kbd>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- RIGHT PANEL: UPDATE HISTORY -->
+        <section>
+          <div class="mineral-card" style="height: 100%">
+            <div class="mineral-card-header">
+              <h2 class="mineral-card-title">
+                <svg class="mineral-svg-icon" viewBox="0 0 24 24">
+                  <path d="M12 8v4l3 3"></path>
+                  <circle cx="12" cy="12" r="9"></circle>
+                </svg>
+                Update History
+              </h2>
+              <p class="mineral-card-subtitle">
+                Recent changelogs and platform maintenance log.
+              </p>
+            </div>
+
+            <!-- EXACT CHANGELOG HTML CONTAINER -->
+            <div
+              id="mineral-changelog-scroll"
+              class="mineral-scroll"
+              tabindex="0"
+            >
+              <article class="mineral-log-entry">
+                <header class="mineral-log-head">
+                  <span class="mineral-log-version">3.0</span
+                  ><span class="mineral-log-date">September 22, 2026</span>
+                </header>
+                <ul class="mineral-log-notes">
+                  <li>Updated to Minecraft 26.2</li>
+                  <li></li>
+                </ul>
+              </article>
+              <article class="mineral-log-entry">
+                <header class="mineral-log-head">
+                  <span class="mineral-log-version">2.1</span
+                  ><span class="mineral-log-date">June 16, 2026</span>
+                </header>
+                <ul class="mineral-log-notes">
+                  <li>Updated to Astra Client v2.1</li>
+                </ul>
+              </article>
+              <article class="mineral-log-entry">
+                <header class="mineral-log-head">
+                  <span class="mineral-log-version">2.0.0</span
+                  ><span class="mineral-log-date">June 16, 2026</span>
+                </header>
+                <ul class="mineral-log-notes">
+                  <li>Updated to Astra Client v2!</li>
+                  <li>Redesigned launcher portal.</li>
+                  <li>
+                    Configured optimized asset delivery pipelines using
+                    assets.epw.
+                  </li>
+                </ul>
+              </article>
+              <article class="mineral-log-entry">
+                <header class="mineral-log-head">
+                  <span class="mineral-log-version">1.4</span
+                  ><span class="mineral-log-date">Mar 4, 2026</span>
+                </header>
+                <ul class="mineral-log-notes">
+                  <li>Updated UI layout.</li>
+                </ul>
+              </article>
+              <article class="mineral-log-entry">
+                <header class="mineral-log-head">
+                  <span class="mineral-log-version">1.3</span
+                  ><span class="mineral-log-date">Jan 14, 2026</span>
+                </header>
+                <ul class="mineral-log-notes">
+                  <li>Refined version badge display.</li>
+                  <li>Finalized UI layout.</li>
+                </ul>
+              </article>
+              <article class="mineral-log-entry">
+                <header class="mineral-log-head">
+                  <span class="mineral-log-version">1.2</span
+                  ><span class="mineral-log-date">Jan 14, 2026</span>
+                </header>
+                <ul class="mineral-log-notes">
+                  <li>Fixed engine initialization crash</li>
+                  <li>Restored full server/relay lists</li>
+                  <li>Restored tab cloaking &amp; meta tags</li>
+                  <li>Pinned attribution footer</li>
+                  <li>Added nested scrolling for update history</li>
+                </ul>
+              </article>
+              <article class="mineral-log-entry">
+                <header class="mineral-log-head">
+                  <span class="mineral-log-version">1.1</span
+                  ><span class="mineral-log-date">Jan 12, 2026</span>
+                </header>
+                <ul class="mineral-log-notes">
+                  <li>Improved countdown screen.</li>
+                  <li>Initial UI refinements</li>
+                </ul>
+              </article>
+              <article class="mineral-log-entry">
+                <header class="mineral-log-head">
+                  <span class="mineral-log-version">1.0 Release</span
+                  ><span class="mineral-log-date">Jan 12, 2026</span>
+                </header>
+                <ul class="mineral-log-notes">
+                  <li>Improved countdown screen.</li>
+                  <li>Initial UI refinements</li>
+                </ul>
+              </article>
+              <article class="mineral-log-entry">
+                <header class="mineral-log-head">
+                  <span class="mineral-log-version">1.0 Beta</span
+                  ><span class="mineral-log-date">Jan 7, 2026</span>
+                </header>
+                <ul class="mineral-log-notes">
+                  <li>Initial Beta testing phase</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="mineral-footer">
+        <div class="mineral-footer-left">
+          <img
+            src="https://mantleunblocked.github.io/assets/full%20logo.png"
+            alt="Mantle Logo"
+            class="mineral-footer-logo"
+          />
+          <span>Mineral is developed and maintained by Mantle.</span>
+        </div>
+        <span>Minecraft is a trademark of Mojang Synergies AB.</span>
+      </footer>
+    </div>
+
+    <!-- GAME CONTAINER FRAME -->
+    <div
+      style="
+        margin: 0px;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: black;
+        display: none;
+      "
+      id="game_frame"
+    ></div>
   </body>
 </html>
