@@ -14,13 +14,13 @@
       name="keywords"
       content="mineral, mantle, minecraft, eaglercraft, 1.12, 1.12.2, web client"
     />
-    <title>Mineral - Web Minecraft Client by Mantle</title>
+    <title>Mineral - Web Minecraft Client</title>
     <meta property="og:locale" content="en-US" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Mineral - Web Minecraft Client" />
     <meta
       property="og:description"
-      content="A high-performance browser client for Minecraft, engineered by Mantle."
+      content="Play Minecraft directly in your browser."
     />
     <meta
       property="og:image"
@@ -75,7 +75,8 @@
         background-color: var(--bg-main);
         display: flex;
         flex-direction: column;
-        overflow-y: auto;
+        height: 100vh;
+        overflow: hidden;
       }
 
       .mineral-header {
@@ -85,30 +86,18 @@
         align-items: center;
         justify-content: space-between;
         background-color: var(--bg-main);
+        flex-shrink: 0;
       }
 
       .mineral-brand {
         display: flex;
         align-items: center;
-        gap: 12px;
       }
 
       .mineral-brand-logo {
         height: 28px;
         width: auto;
         display: block;
-      }
-
-      .mineral-mantle-logo {
-        height: 20px;
-        width: auto;
-        display: block;
-      }
-
-      .mineral-brand-divider {
-        width: 1px;
-        height: 16px;
-        background-color: var(--border-color);
       }
 
       .mineral-badge {
@@ -130,12 +119,20 @@
         grid-template-columns: 1fr;
         gap: 24px;
         flex: 1;
+        min-height: 0;
       }
 
       @media (min-width: 900px) {
         .mineral-main-container {
           grid-template-columns: 1.15fr 0.85fr;
         }
+      }
+
+      .mineral-section-right {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        height: 100%;
       }
 
       .mineral-card {
@@ -148,10 +145,16 @@
         gap: 20px;
       }
 
+      .mineral-card-fill {
+        height: 100%;
+        min-height: 0;
+      }
+
       .mineral-card-header {
         display: flex;
         flex-direction: column;
         gap: 4px;
+        flex-shrink: 0;
       }
 
       .mineral-card-title {
@@ -235,29 +238,6 @@
         background-color: var(--accent-primary-hover);
       }
 
-      .mineral-launch-options {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 13px;
-        color: var(--text-secondary);
-      }
-
-      .mineral-checkbox-label {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        user-select: none;
-      }
-
-      .mineral-checkbox {
-        accent-color: var(--text-primary);
-        width: 15px;
-        height: 15px;
-        cursor: pointer;
-      }
-
       /* Keybinds Grid Styling */
       .mineral-keybinds-grid {
         display: grid;
@@ -313,7 +293,8 @@
       /* Changelog Styles */
       .mineral-scroll {
         overflow-y: auto;
-        max-height: 400px;
+        flex: 1;
+        min-height: 0;
         padding-right: 8px;
       }
 
@@ -388,16 +369,16 @@
         font-size: 12px;
         color: var(--text-muted);
         background-color: var(--bg-main);
+        flex-shrink: 0;
       }
 
       .mineral-footer-left {
         display: flex;
         align-items: center;
-        gap: 12px;
       }
 
       .mineral-footer-logo {
-        height: 16px;
+        height: 18px;
         width: auto;
       }
 
@@ -430,6 +411,10 @@
             worldsDB: "worlds",
             servers: [
               /* example: { addr: "ws://localhost:8081/", name: "Local test server" } */
+              {
+                addr: "wss://mineralsmp-mantle.laneesports.com/",
+                name: "[OFFICAL] Mineral SMP",
+              },
             ],
             relays: [
               {
@@ -478,16 +463,6 @@
         var launcher = document.getElementById("launcher_overlay");
         var gameFrame = document.getElementById("game_frame");
 
-        var fsCheckbox = document.getElementById("mineral-fullscreen-opt");
-        if (fsCheckbox && fsCheckbox.checked) {
-          var doc = document.documentElement;
-          if (doc.requestFullscreen) {
-            doc.requestFullscreen().catch(function () {});
-          } else if (doc.webkitRequestFullscreen) {
-            doc.webkitRequestFullscreen();
-          }
-        }
-
         if (launcher) launcher.style.display = "none";
         if (gameFrame) gameFrame.style.display = "block";
 
@@ -508,12 +483,6 @@
             src="https://mantleunblocked.github.io/assets/logo.png"
             alt="Mineral Logo"
             class="mineral-brand-logo"
-          />
-          <div class="mineral-brand-divider"></div>
-          <img
-            src="https://mantleunblocked.github.io/assets/full%20logo.png"
-            alt="Mantle Logo"
-            class="mineral-mantle-logo"
           />
         </div>
         <span class="mineral-badge">v3.0</span>
@@ -536,8 +505,7 @@
               </div>
             </div>
             <p class="mineral-hero-description">
-              A high-performance browser client for Minecraft, engineered by
-              Mantle for seamless gameplay.
+              Play Minecraft directly in your browser.
             </p>
 
             <!-- LAUNCH BAR -->
@@ -552,25 +520,10 @@
                 </svg>
                 Launch Mineral
               </button>
-              <div class="mineral-launch-options">
-                <label class="mineral-checkbox-label">
-                  <input
-                    type="checkbox"
-                    id="mineral-fullscreen-opt"
-                    class="mineral-checkbox"
-                    checked
-                  />
-                  Launch in full screen
-                </label>
-                <span
-                  id="mineral-server-status"
-                  style="
-                    display: none;
-                    font-size: 12px;
-                    color: var(--text-muted);
-                  "
-                ></span>
-              </div>
+              <span
+                id="mineral-server-status"
+                style="display: none; font-size: 12px; color: var(--text-muted)"
+              ></span>
             </div>
           </div>
 
@@ -669,8 +622,8 @@
         </section>
 
         <!-- RIGHT PANEL: UPDATE HISTORY -->
-        <section>
-          <div class="mineral-card" style="height: 100%">
+        <section class="mineral-section-right">
+          <div class="mineral-card mineral-card-fill">
             <div class="mineral-card-header">
               <h2 class="mineral-card-title">
                 <svg class="mineral-svg-icon" viewBox="0 0 24 24">
@@ -796,9 +749,7 @@
             alt="Mantle Logo"
             class="mineral-footer-logo"
           />
-          <span>Mineral is developed and maintained by Mantle.</span>
         </div>
-        <span>Minecraft is a trademark of Mojang Synergies AB.</span>
       </footer>
     </div>
 
