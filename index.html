@@ -255,6 +255,40 @@
         gap: 6px;
       }
 
+      /* Highlighted / Featured Keybind Item for Mods */
+      .mineral-keybind-item.mineral-keybind-featured {
+        background: linear-gradient(135deg, rgba(250, 250, 250, 0.08) 0%, var(--bg-main) 100%);
+        border: 1px solid var(--accent-primary);
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.12);
+        position: relative;
+      }
+
+      .mineral-keybind-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+      }
+
+      .mineral-featured-badge {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 2px 6px;
+        border-radius: var(--radius-sm);
+        background-color: var(--accent-primary);
+        color: var(--accent-primary-text);
+      }
+
+      .mineral-kbd-highlight {
+        background-color: var(--accent-primary);
+        color: var(--accent-primary-text);
+        border-color: #ffffff;
+        font-weight: 700;
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
+      }
+
       .mineral-keybind-label {
         font-size: 12px;
         color: var(--text-secondary);
@@ -552,6 +586,17 @@
 
             <!-- EDITABLE KEYBINDS SECTION -->
             <div class="mineral-keybinds-grid">
+              <!-- FEATURED MODS KEYBIND -->
+              <div class="mineral-keybind-item mineral-keybind-featured">
+                <div class="mineral-keybind-head">
+                  <span class="mineral-keybind-label" style="color: var(--text-primary);">Mod Menu</span>
+                  <span class="mineral-featured-badge">Key Feature</span>
+                </div>
+                <div class="mineral-keybind-keys">
+                  <kbd class="mineral-kbd mineral-kbd-highlight">Right Shift</kbd>
+                </div>
+              </div>
+
               <div class="mineral-keybind-item">
                 <span class="mineral-keybind-label">Movement</span>
                 <div class="mineral-keybind-keys">
@@ -663,8 +708,8 @@
               </article>
               <article class="mineral-log-entry">
                 <header class="mineral-log-head">
-                  <span class="mineral-log-version">2.1</span
-                  ><span class="mineral-log-date">June 16, 2026</span>
+                  <span class="mineral-log-version">2.1</span>
+                  <span class="mineral-log-date">June 16, 2026</span>
                 </header>
                 <ul class="mineral-log-notes">
                   <li>Updated to Astra Client v2.1</li>
@@ -672,8 +717,8 @@
               </article>
               <article class="mineral-log-entry">
                 <header class="mineral-log-head">
-                  <span class="mineral-log-version">2.0.0</span
-                  ><span class="mineral-log-date">June 16, 2026</span>
+                  <span class="mineral-log-version">2.0.0</span>
+                  <span class="mineral-log-date">June 16, 2026</span>
                 </header>
                 <ul class="mineral-log-notes">
                   <li>Updated to Astra Client v2!</li>
@@ -686,8 +731,8 @@
               </article>
               <article class="mineral-log-entry">
                 <header class="mineral-log-head">
-                  <span class="mineral-log-version">1.4</span
-                  ><span class="mineral-log-date">Mar 4, 2026</span>
+                  <span class="mineral-log-version">1.4</span>
+                  <span class="mineral-log-date">Mar 4, 2026</span>
                 </header>
                 <ul class="mineral-log-notes">
                   <li>Updated UI layout.</li>
@@ -695,8 +740,8 @@
               </article>
               <article class="mineral-log-entry">
                 <header class="mineral-log-head">
-                  <span class="mineral-log-version">1.3</span
-                  ><span class="mineral-log-date">Jan 14, 2026</span>
+                  <span class="mineral-log-version">1.3</span>
+                  <span class="mineral-log-date">Jan 14, 2026</span>
                 </header>
                 <ul class="mineral-log-notes">
                   <li>Refined version badge display.</li>
@@ -705,8 +750,8 @@
               </article>
               <article class="mineral-log-entry">
                 <header class="mineral-log-head">
-                  <span class="mineral-log-version">1.2</span
-                  ><span class="mineral-log-date">Jan 14, 2026</span>
+                  <span class="mineral-log-version">1.2</span>
+                  <span class="mineral-log-date">Jan 14, 2026</span>
                 </header>
                 <ul class="mineral-log-notes">
                   <li>Fixed engine initialization crash</li>
@@ -718,8 +763,8 @@
               </article>
               <article class="mineral-log-entry">
                 <header class="mineral-log-head">
-                  <span class="mineral-log-version">1.1</span
-                  ><span class="mineral-log-date">Jan 12, 2026</span>
+                  <span class="mineral-log-version">1.1</span>
+                  <span class="mineral-log-date">Jan 12, 2026</span>
                 </header>
                 <ul class="mineral-log-notes">
                   <li>Improved countdown screen.</li>
@@ -728,8 +773,8 @@
               </article>
               <article class="mineral-log-entry">
                 <header class="mineral-log-head">
-                  <span class="mineral-log-version">1.0 Release</span
-                  ><span class="mineral-log-date">Jan 12, 2026</span>
+                  <span class="mineral-log-version">1.0 Release</span>
+                  <span class="mineral-log-date">Jan 12, 2026</span>
                 </header>
                 <ul class="mineral-log-notes">
                   <li>Improved countdown screen.</li>
@@ -738,8 +783,8 @@
               </article>
               <article class="mineral-log-entry">
                 <header class="mineral-log-head">
-                  <span class="mineral-log-version">1.0 Beta</span
-                  ><span class="mineral-log-date">Jan 7, 2026</span>
+                  <span class="mineral-log-version">1.0 Beta</span>
+                  <span class="mineral-log-date">Jan 7, 2026</span>
                 </header>
                 <ul class="mineral-log-notes">
                   <li>Initial Beta testing phase</li>
