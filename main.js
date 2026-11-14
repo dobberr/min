@@ -10,11 +10,11 @@ const status = document.getElementById("status");
 // Whether this browser can draw the game; says why not on the page.
 async function webgpu() {
     if (!navigator.gpu) {
-        status.textContent = `Horizon needs WebGPU, which this browser doesn't offer.`;
+        status.textContent = `Mineral needs WebGPU, which this browser doesn't offer.\nPlease switch to Google Chrome (or Microsoft Edge) for Mineral to work!\nIf you are already using Chrome, you are on an old version, so you will need to update your browser.`;
         return false;
     }
     if (!(await navigator.gpu.requestAdapter().catch(() => null))) {
-        status.textContent = "Horizon needs WebGPU, and this browser offers it but found no GPU to use " +
+        status.textContent = "Mineral needs WebGPU, and this browser offers it but found no GPU to use " +
             `(it may be switched off, or the graphics driver not supported).`;
         return false;
     }
