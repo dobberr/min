@@ -1,3 +1,23 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:bc9155fe83f4a71333d421411f04ff1acf63a3a6287920c3c77334b330a6dde4
-size 128917317
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mineral</title>
+<link rel="icon" type="image/png" href="icon.png">
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  body > canvas { display: block; width: 100vw !important; height: 100vh !important; outline: none; }
+  #status {
+    position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+    color: #ddd; font: 16px/1.5 system-ui, sans-serif; text-align: center; padding: 16px;
+    pointer-events: none; white-space: pre-line;
+  }
+  #status:empty { display: none; }
+</style>
+</head>
+<body>
+<div id="status">Starting…</div>
+<script type="module" src="main.js"></script>
+</body>
+</html>
