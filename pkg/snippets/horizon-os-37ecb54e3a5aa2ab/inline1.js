@@ -193,3 +193,7 @@ export function horizon_take_picked() {
 export function horizon_picked_kind() {
     return picked ? picked[0] : undefined;
 }
+export function horizon_global_string(name) {
+    const v = globalThis[name];
+    return typeof v === "string" ? v : null;
+}

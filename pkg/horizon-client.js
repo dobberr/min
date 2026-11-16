@@ -1,5 +1,5 @@
 import { horizon_http_get } from './snippets/horizon-os-37ecb54e3a5aa2ab/inline0.js';
-import { horizon_clipboard_image, horizon_console, horizon_download, horizon_open_url, horizon_pick_file, horizon_picked_kind, horizon_pointer_lock, horizon_recorder_error, horizon_recorder_start } from './snippets/horizon-os-37ecb54e3a5aa2ab/inline1.js';
+import { horizon_clipboard_image, horizon_console, horizon_download, horizon_global_string, horizon_open_url, horizon_pick_file, horizon_picked_kind, horizon_pointer_lock, horizon_recorder_error, horizon_recorder_start } from './snippets/horizon-os-37ecb54e3a5aa2ab/inline1.js';
 import { horizon_spawn_worker } from './snippets/horizon-os-37ecb54e3a5aa2ab/inline2.js';
 import { horizon_fetch_sync } from './snippets/horizon-os-37ecb54e3a5aa2ab/inline3.js';
 import * as import1 from "./snippets/horizon-os-37ecb54e3a5aa2ab/inline2.js"
@@ -647,6 +647,13 @@ function __wbg_get_imports(memory) {
         __wbg_horizon_fetch_sync_8ca20e906b706b6e: function(arg0, arg1, arg2) {
             const ret = horizon_fetch_sync(getStringFromWasm0(arg1, arg2));
             var ptr1 = isLikeNone(ret) ? 0 : passArray8ToWasm0(ret, wasm.__wbindgen_malloc);
+            var len1 = WASM_VECTOR_LEN;
+            getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);
+            getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);
+        },
+        __wbg_horizon_global_string_06bd4744a8916ba0: function(arg0, arg1, arg2) {
+            const ret = horizon_global_string(getStringFromWasm0(arg1, arg2));
+            var ptr1 = isLikeNone(ret) ? 0 : passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
             var len1 = WASM_VECTOR_LEN;
             getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);
             getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);
