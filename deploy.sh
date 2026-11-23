@@ -75,6 +75,7 @@ fi
 git add -A
 
 DID=0
+PUSHED=""
 if ! git diff --cached --quiet; then
   echo "Committing: $MSG"
   git commit -m "$MSG"
@@ -85,6 +86,7 @@ AHEAD=$(git rev-list --count "origin/$BRANCH..HEAD")
 if (( AHEAD > 0 )); then
   echo "Pushing $AHEAD commit(s) to origin/$BRANCH"
   git push origin "$BRANCH"
+  PUSHED=$(git rev-parse --short HEAD)
   DID=1
 fi
 
@@ -118,4 +120,9 @@ done
 
 echo
 surge "$DOMAIN" status
-printf '\nDeployed: https://%s\nRevision: %s\n' "$DOMAIN" "${REV:-unknown}"
+if [[ -n "$PUSHED" ]]; then
+  printf '\nGitHub: pushed %s to origin/%s\n' "$PUSHED" "$BRANCH"
+else
+  printf '\nGitHub: already up to date\n'
+fi
+printf 'Deployed: https://%s\nRevision: %s\n' "$DOMAIN" "${REV:-unknown}"
