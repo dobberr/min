@@ -117,9 +117,17 @@ function lock(canvas) {
         if (p && p.catch) p.catch(() => {});
     } catch (e) {}
 }
+// Asked at every mouse motion (hundreds to thousands a second with a fast
+// mouse): kept from the lock's events, not looked up each time.
+let lockedCanvas = false;
+if (typeof document !== "undefined") {
+    document.addEventListener("pointerlockchange", () => {
+        lockedCanvas = !!document.pointerLockElement &&
+            document.pointerLockElement === document.querySelector("canvas");
+    });
+}
 export function horizon_pointer_locked() {
-    const canvas = document.querySelector("canvas");
-    return !!canvas && document.pointerLockElement === canvas;
+    return lockedCanvas;
 }
 export function horizon_pointer_lock(want) {
     wantLock = want;
